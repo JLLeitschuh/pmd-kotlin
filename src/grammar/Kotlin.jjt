@@ -140,3 +140,95 @@ TOKEN :
 {
   <SIMPLE_NAME: (["a"-"z", "A"-"Z"])+> // TODO
 }
+
+SimpleNode KotlinFile() : {} // kotlinFile: preamble toplevelObject*
+{
+  Preamble() // TODO (TopLevelObject())*
+  <EOF>
+  {
+    return jjtThis;
+  }
+}
+
+void Preamble() : {} // preamble: fileAnnotations? packageHeader? import*
+{
+  (FileAnnotations())? (PackageHeader())? (Import())*
+}
+
+void FileAnnotations() : {} // fileAnnotations: fileAnnotation*
+{
+  (FileAnnotation())+
+}
+
+void FileAnnotation() : {} // fileAnnotation: "@" "file" ":" ("[" annotationEntry+ "]" | annotationEntry)
+{
+  "@" "file" ":" ("[" (AnnotationEntry())+ "]" | AnnotationEntry())
+}
+
+void AnnotationEntry() : {} //TODO
+{
+  ""
+}
+
+void PackageHeader() : {} // modifiers "package" SimpleName{"."} SEMI?
+{
+  Modifiers() "package" <SIMPLE_NAME> ("."<SIMPLE_NAME>)* (<SEMI>)?
+}
+
+void Import() : {} // import: "import" SimpleName{"."} ("." "*" | "as" SimpleName)? SEMI?
+{
+  "import" <SIMPLE_NAME> ("."<SIMPLE_NAME>)* ("." "*" | "as" <SIMPLE_NAME>)? (<SEMI>)?
+}
+
+void Modifiers() : {}
+{
+  (Modifier())*
+}
+
+void Modifier() : {} // "@"? ++ modifierKeyword
+{
+  ("@")?ModifierKeyword()
+}
+
+void ModifierKeyword() : {}
+{
+    ClassModifier()
+  | AccessModifier()
+  | VarianceAnnotation()
+  | MemberModifier()
+  // | Annotations() TODO
+}
+
+void ClassModifier() : {}
+{
+    "abstract"
+  | "final"
+  | "enum"
+  | "open"
+  | "annotation"
+}
+
+void AccessModifier() : {}
+{
+    "private"
+  | "protected"
+  | "public"
+  | "internal"
+}
+
+void VarianceAnnotation() : {}
+{
+    "in"
+  | "out"
+}
+
+void MemberModifier() : {}
+{
+    "override"
+  | "open"
+  | "final"
+  | "abstract"
+}
+
+
+
