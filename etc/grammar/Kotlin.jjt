@@ -1,0 +1,25 @@
+options {
+}
+
+PARSER_BEGIN(KotlinParser)
+public class KotlinParser {
+
+}
+PARSER_END(KotlinParser)
+
+/*NUMBER LITERALS */
+TOKEN :
+{
+  < #DIGIT: ["0"-"9"]>
+| < #BINARY_DIGIT: ["0"-"1"]>
+| < #HEXADECIMAL_DIGIT: <DIGIT> | ["a"-"f", "A"-"F"]>
+
+| < INTEGER_LITERAL: (<DIGIT>)+>
+| < BINARY_LITERAL: "0"["b", "B"](<BINARY_DIGIT>)+>
+| < HEXADECIMAL_LITERAL: "0"["x", "X"](<HEXADECIMAL_DIGIT>)+>
+
+| < #SIGN: ["-", "+"]>
+| < #SIGNED_INTEGER: (<SIGN>)?<INTEGER_LITERAL>>
+
+| < FLOAT_LITERAL: <INTEGER_LITERAL>("."<INTEGER_LITERAL>)?(["e", "E"]<SIGNED_INTEGER>)?(["f", "F"])?>
+}
