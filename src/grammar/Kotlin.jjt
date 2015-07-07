@@ -2,11 +2,13 @@ options {
 }
 
 PARSER_BEGIN(KotlinParser)
+import net.sourceforge.pmd.lang.ast.*;
+
 public class KotlinParser {
 
 public static void main(String[] args) {
         try {
-            new KotlinParser(new java.io.StringReader(args[0])).S();
+            new KotlinParser(new java.io.StringReader(args[0])).KotlinFile();
             System.out.println("Syntax is okay");
         } catch (Throwable e) {
             // Catching Throwable is ugly but JavaCC throws Error objects!
@@ -75,5 +77,66 @@ TOKEN :
 | < STRING_LITERAL: "\""(<STRING_CHARACTERS>)?"\"">
 }
 
-void S(): {} { E() <EOF>}
-void E(): {} {<INTEGER_LITERAL> | <HEXADECIMAL_LITERAL> | <FLOAT_LITERAL>}
+
+TOKEN :
+{
+  <SEMI: ";" | ["\n", "\r"] | "\r\n">
+}
+
+/* KEYWORDS */
+TOKEN :
+{
+  <PACKAGE: "package" >
+| <AS: "as">
+| <TYPE: "type">
+| <CLASS: "class">
+| <THIS: "this">
+| <VAL: "val">
+| <VAR: "var">
+| <FUN: "fun">
+| <EXTENSION: "extension">
+| <FOR: "for">
+| <NULL: "null">
+| <TYPEOF: "typeof">
+| <NEW: "new">
+| <TRUE: "true">
+| <FALSE: "false">
+| <IS: "is">
+| <IN: "in">
+| <THROW: "throw">
+| <RETURN: "return">
+| <BREAK: "break">
+| <CONTINUE: "continue">
+| <OBJECT: "object">
+| <IF: "if">
+| <ELSE: "else">
+| <WHILE: "while">
+| <DO: "do">
+| <WHEN: "when">
+| <OUT: "out">
+| <REF: "ref">
+| <TRY: "try">
+| <WHERE: "where">
+| <BY: "by">
+| <GET: "get">
+| <SET: "set">
+| <IMPORT: "import">
+| <FINAL: "final">
+| <ABSTRACT: "abstract">
+| <ENUM: "enum">
+| <OPEN: "open">
+| <ANNOTATION: "annotation">
+| <OVERRIDE: "override">
+| <PRIVATE: "private">
+| <PUBLIC: "public">
+| <INTERNAL: "internal">
+| <PROTECTED: "protected">
+| <CATCH: "catch">
+| <FINALLY: "finally">
+}
+
+/* IDENTIFIERS */
+TOKEN :
+{
+  <SIMPLE_NAME: (["a"-"z", "A"-"Z"])+> // TODO
+}
