@@ -3,11 +3,10 @@ options {
 
 PARSER_BEGIN(KotlinParser)
 public class KotlinParser {
-
 }
 PARSER_END(KotlinParser)
 
-/*NUMBER LITERALS */
+/* NUMBER LITERALS */
 TOKEN :
 {
   < #DIGIT: ["0"-"9"]>
@@ -22,4 +21,17 @@ TOKEN :
 | < #SIGNED_INTEGER: (<SIGN>)?<INTEGER_LITERAL>>
 
 | < FLOAT_LITERAL: <INTEGER_LITERAL>("."<INTEGER_LITERAL>)?(["e", "E"]<SIGNED_INTEGER>)?(["f", "F"])?>
+}
+
+/* CHARACTER LITERAL */
+TOKEN :
+{
+  < #SINGLE_CHARACTER: ~["'","\\","\n","\r"]>
+| < #UNICODE_ESCAPE: "\\u" <HEXADECIMAL_DIGIT><HEXADECIMAL_DIGIT><HEXADECIMAL_DIGIT><HEXADECIMAL_DIGIT>>
+| < #ESCAPE_SEQUENCE: ("\\"["b", "t", "n", "f", "r", "\"", "'", "\\"]) | <UNICODE_ESCAPE>>
+| < CHARACTER_LITERAL: "'"(<SINGLE_CHARACTER>|<ESCAPE_SEQUENCE>)"'">
+
+| < #STRING_CHARACTER: (~["\"","\\","\n","\r"]) | <ESCAPE_SEQUENCE>>
+| < #STRING_CHARACTERS: (<STRING_CHARACTER>)+>
+| < STRING_LITERAL: "\""(<STRING_CHARACTERS>)?"\"">
 }
