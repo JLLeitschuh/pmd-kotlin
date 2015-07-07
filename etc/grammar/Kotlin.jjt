@@ -3,8 +3,47 @@ options {
 
 PARSER_BEGIN(KotlinParser)
 public class KotlinParser {
+
+public static void main(String[] args) {
+        try {
+            new KotlinParser(new java.io.StringReader(args[0])).S();
+            System.out.println("Syntax is okay");
+        } catch (Throwable e) {
+            // Catching Throwable is ugly but JavaCC throws Error objects!
+            System.out.println("Syntax check failed: " + e.getMessage());
+        }
+    }
 }
 PARSER_END(KotlinParser)
+
+/* WHITESPACE */
+SPECIAL_TOKEN :
+{
+  " " | "\t" | "\n" | "\r" | "\f"
+}
+
+/* COMMENTS */
+SPECIAL_TOKEN :
+{
+  <SINGLE_LINE_COMMENT: "//"(~["\n","\r"])* ("\n"|"\r"|"\r\n")? >
+}
+
+MORE :
+{
+  "/*" : IN_MULTI_LINE_COMMENT
+}
+
+<IN_MULTI_LINE_COMMENT>
+SPECIAL_TOKEN :
+{
+  <MULTI_LINE_COMMENT: "*/" > : DEFAULT
+}
+
+<IN_MULTI_LINE_COMMENT>
+MORE :
+{
+  < ~[] >
+}
 
 /* NUMBER LITERALS */
 TOKEN :
@@ -23,7 +62,7 @@ TOKEN :
 | < FLOAT_LITERAL: <INTEGER_LITERAL>("."<INTEGER_LITERAL>)?(["e", "E"]<SIGNED_INTEGER>)?(["f", "F"])?>
 }
 
-/* CHARACTER LITERAL */
+/* CHARACTER AND STRING LITERALS */
 TOKEN :
 {
   < #SINGLE_CHARACTER: ~["'","\\","\n","\r"]>
@@ -35,3 +74,6 @@ TOKEN :
 | < #STRING_CHARACTERS: (<STRING_CHARACTER>)+>
 | < STRING_LITERAL: "\""(<STRING_CHARACTERS>)?"\"">
 }
+
+void S(): {} { E() <EOF>}
+void E(): {} {<INTEGER_LITERAL> | <HEXADECIMAL_LITERAL> | <FLOAT_LITERAL>}
