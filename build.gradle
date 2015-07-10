@@ -1,11 +1,17 @@
 buildscript {
     ext.kotlinVersion = '0.12.613'
-    repositories { mavenCentral() }
+    repositories {
+        jcenter()
+        mavenCentral()
+    }
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
+        classpath 'de.aaschmid.gradle.plugins:gradle-cpd-plugin:0.4'
+        classpath fileTree(dir: '../build/libs', include: '*.jar')
     }
 }
 
+apply plugin: 'cpd'
 apply plugin: 'idea'
 apply plugin: 'kotlin'
 
@@ -14,8 +20,16 @@ repositories { mavenCentral() }
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
     compile "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
+    compile "org.jetbrains.kotlin:kotlin-compiler:$kotlinVersion"
+
+    compile 'net.sourceforge.pmd:pmd-core:5.3.2'
+
 
     testCompile 'org.testng:testng:6.1.1'
+}
+
+cpd {
+    language = 'kotlin'
 }
 
 test.useTestNG()
