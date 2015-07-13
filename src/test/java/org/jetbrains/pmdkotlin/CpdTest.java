@@ -24,6 +24,7 @@ public class CpdTest {
         config = new CPDConfiguration();
         config.setLanguage(new KotlinLanguage());
         config.setEncoding("UTF-8");
+        config.setMinimumTileSize(25);
         cpd = new CPD(config);
         listener = mock(CPDListener.class);
         cpd.setCpdListener(listener);

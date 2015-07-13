@@ -8,6 +8,7 @@ public class KotlinLanguageModule extends BaseLanguageModule{
 
     public KotlinLanguageModule() {
         super(NAME, null, TERSE_NAME, null);
+        addVersion("0.12", new KotlinHandler(), true);
     }
 
 }

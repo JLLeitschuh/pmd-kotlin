@@ -1,22 +1,34 @@
 package org.jetbrains.pmdkotlin.lang.kotlin;
 
+import com.intellij.psi.tree.IElementType;
 import net.sourceforge.pmd.lang.TokenManager;
-import net.sourceforge.pmd.lang.ast.SimpleCharStream;
-import org.jetbrains.kotlin.lexer.JetLexer;
 import org.jetbrains.kotlin.lexer.JetTokens;
-
+import org.apache.commons.io.IOUtils;
+import org.jetbrains.kotlin.lexer.JetLexer;
+import java.io.IOException;
 import java.io.Reader;
 
 public class KotlinTokenManager extends JetLexer implements TokenManager, JetTokens {
     private static ThreadLocal<String> fileName = new ThreadLocal();
     public KotlinTokenManager(Reader source) {
         super();
-        start(new SimpleCharStream(source).GetImage(), 0, 0, 0);
+        try {
+            String s = IOUtils.toString(source);
+            start(s, 0, s.length(), 0);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public Object getCurrentToken() {
+        Object token = getTokenType();
+        return token;
     }
 
     public Object getNextToken() {
         advance();
-        return getTokenType();
+        Object token = getTokenType();
+        return token;
     }
 
     public void setFileName(String fileName_) {

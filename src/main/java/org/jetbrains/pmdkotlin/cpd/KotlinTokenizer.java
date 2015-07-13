@@ -1,5 +1,6 @@
 package org.jetbrains.pmdkotlin.cpd;
 
+import com.intellij.psi.tree.IElementType;
 import net.sourceforge.pmd.cpd.SourceCode;
 import net.sourceforge.pmd.cpd.TokenEntry;
 import net.sourceforge.pmd.cpd.Tokenizer;
@@ -17,7 +18,7 @@ import java.io.StringReader;
 import java.util.Properties;
 
 
-public class KotlinTokenizer implements Tokenizer{
+public class KotlinTokenizer implements Tokenizer {
     private boolean ignoreLiterals;
     private boolean ignoreIdentifiers;
 
@@ -27,23 +28,24 @@ public class KotlinTokenizer implements Tokenizer{
     }
 
     public void tokenize(SourceCode sourceCode, Tokens tokenEntries) {
-        StringBuilder stringBuilder = sourceCode.getCodeBuffer();
+        String src = sourceCode.getCodeBuffer().toString();
 
         LanguageVersionHandler languageVersionHandler = LanguageRegistry.getLanguage(KotlinLanguageModule.NAME).getDefaultVersion().getLanguageVersionHandler();
         String fileName = sourceCode.getFileName();
         KotlinTokenManager tokenMgr = (KotlinTokenManager) languageVersionHandler.getParser(languageVersionHandler.getDefaultParserOptions()).getTokenManager(
-                fileName, new StringReader(stringBuilder.toString()));
-        JetToken currentToken = (JetToken) tokenMgr.getNextToken();
+                fileName, new StringReader(src));
+        IElementType currentToken = (IElementType) tokenMgr.getCurrentToken();
 
-        while (currentToken.toString().length() > 0) {
-            processToken(tokenEntries, fileName, currentToken, tokenMgr.getTokenStart());
-            currentToken = (JetToken) tokenMgr.getNextToken();
+        while (currentToken != null) {
+            processToken(tokenEntries, src, fileName, currentToken, tokenMgr.getTokenStart(), tokenMgr.getTokenEnd());
+            currentToken = (IElementType) tokenMgr.getNextToken();
         }
         tokenEntries.add(TokenEntry.getEOF());
     }
 
-    private void processToken(Tokens tokenEntries, String fileName, JetToken currentToken, int tokenStart) {
-        String image = (currentToken instanceof JetSingleValueToken) ? ((JetSingleValueToken) currentToken).getValue() : currentToken.toString();
+    private void processToken(Tokens tokenEntries, String src, String fileName, IElementType currentToken, int tokenStart, int tokenEnd) {
+        String image = new String(src.substring(tokenStart, tokenEnd));
+
         if (ignoreLiterals
                 && (currentToken.equals(JetTokens.BLOCK_COMMENT)
                 || currentToken.equals(JetTokens.CHARACTER_LITERAL)
@@ -51,6 +53,7 @@ public class KotlinTokenizer implements Tokenizer{
                 || currentToken.equals(JetTokens.FLOAT_LITERAL))) {
             image = currentToken.toString();
         }
+
         if (ignoreIdentifiers && currentToken.equals(JetTokens.IDENTIFIER)) {
             image = currentToken.toString();
         }
