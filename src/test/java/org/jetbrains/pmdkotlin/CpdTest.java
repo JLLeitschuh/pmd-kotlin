@@ -3,6 +3,7 @@ package org.jetbrains.pmdkotlin;
 import net.sourceforge.pmd.cpd.CPD;
 import net.sourceforge.pmd.cpd.CPDConfiguration;
 import net.sourceforge.pmd.cpd.CPDListener;
+import net.sourceforge.pmd.cpd.Match;
 import org.jetbrains.pmdkotlin.cpd.KotlinLanguage;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
@@ -10,6 +11,7 @@ import org.testng.annotations.Test;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.Iterator;
 
 import static org.mockito.Mockito.mock;
 
@@ -24,7 +26,7 @@ public class CpdTest {
         config = new CPDConfiguration();
         config.setLanguage(new KotlinLanguage());
         config.setEncoding("UTF-8");
-        config.setMinimumTileSize(25);
+        config.setMinimumTileSize(20);
         cpd = new CPD(config);
         listener = mock(CPDListener.class);
         cpd.setCpdListener(listener);
@@ -34,6 +36,13 @@ public class CpdTest {
     public void testDuplicateFunction() throws IOException {
         cpd.add(getKotlinFile("DuplicateFunction.kt"));
         cpd.go();
+
+        Iterator<Match> matches = cpd.getMatches();
+        while (matches.hasNext()) {
+            Match match = matches.next();
+            System.err.println("====================");
+            System.err.println(match.getSourceCodeSlice());
+        }
     }
 
 

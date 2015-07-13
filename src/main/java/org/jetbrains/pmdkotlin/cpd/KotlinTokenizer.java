@@ -21,6 +21,7 @@ import java.util.Properties;
 public class KotlinTokenizer implements Tokenizer {
     private boolean ignoreLiterals;
     private boolean ignoreIdentifiers;
+    private boolean ignoreAnnotations;
 
     public void setProperties(Properties properties) {
         ignoreLiterals = Boolean.parseBoolean(properties.getProperty(IGNORE_LITERALS, "false"));
@@ -34,10 +35,15 @@ public class KotlinTokenizer implements Tokenizer {
         String fileName = sourceCode.getFileName();
         KotlinTokenManager tokenMgr = (KotlinTokenManager) languageVersionHandler.getParser(languageVersionHandler.getDefaultParserOptions()).getTokenManager(
                 fileName, new StringReader(src));
+
+        TokenDiscarder discarder = new TokenDiscarder(ignoreAnnotations);
         IElementType currentToken = (IElementType) tokenMgr.getCurrentToken();
 
         while (currentToken != null) {
-            processToken(tokenEntries, src, fileName, currentToken, tokenMgr.getTokenStart(), tokenMgr.getTokenEnd());
+            discarder.updateState(currentToken);
+            if (!discarder.isDiscarding()) {
+                processToken(tokenEntries, src, fileName, currentToken, tokenMgr.getTokenStart(), tokenMgr.getTokenEnd());
+            }
             currentToken = (IElementType) tokenMgr.getNextToken();
         }
         tokenEntries.add(TokenEntry.getEOF());
@@ -45,6 +51,7 @@ public class KotlinTokenizer implements Tokenizer {
 
     private void processToken(Tokens tokenEntries, String src, String fileName, IElementType currentToken, int tokenStart, int tokenEnd) {
         String image = new String(src.substring(tokenStart, tokenEnd));
+        //String image = currentToken.toString();
 
         if (ignoreLiterals
                 && (currentToken.equals(JetTokens.BLOCK_COMMENT)
@@ -60,4 +67,48 @@ public class KotlinTokenizer implements Tokenizer {
         tokenEntries.add(new TokenEntry(image, fileName, tokenStart));
     }
 
+    private static class TokenDiscarder {
+        public TokenDiscarder(boolean ignoreAnnotations) {
+            this.ignoreAnnotations = ignoreAnnotations;
+
+            discardingSemicolon = false;
+            discardingKeywords = false;
+            discardingAnnotations = false;
+            discardingWhiteSpaces = false;
+
+            isAnnotation = false;
+            nextTokenEndsAnnotation = false;
+            annotationStack = 0;
+        }
+
+        public void updateState(IElementType currentToken) {
+            skipSemicolon(currentToken);
+            skipWhiteSpaces(currentToken);
+        }
+
+        private void skipSemicolon(IElementType currentToken) {
+            discardingSemicolon = currentToken.equals(JetTokens.SEMICOLON);
+        }
+
+        private void skipWhiteSpaces(IElementType currentToken) {
+            discardingWhiteSpaces = currentToken.equals(JetTokens.WHITE_SPACE);
+        }
+
+        public boolean isDiscarding() {
+            boolean result = discardingWhiteSpaces || discardingSemicolon || discardingKeywords || discardingAnnotations;
+            return result;
+        }
+
+
+        private boolean isAnnotation;
+        private boolean nextTokenEndsAnnotation;
+        private int annotationStack;
+
+        private boolean discardingSemicolon;
+        private boolean discardingKeywords;
+        private boolean discardingAnnotations;
+        private boolean discardingWhiteSpaces;
+
+        private boolean ignoreAnnotations;
+    }
 }
