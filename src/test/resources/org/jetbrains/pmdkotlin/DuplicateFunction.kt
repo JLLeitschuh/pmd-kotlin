@@ -1,17 +1,5 @@
-fun main(args: Array<String>) {
-    println("A nice place to start")
-    println("A nice place to start")
-    println("A nice place to start")
-    println("A nice place to start")
-    println("A nice place to start")
-    println("A nice place to start")
-}
+import org.apache as ap fun m(): Int {return 0}
 
-fun main1(args: Array<String>) {
-    println("A nice place to start")
-    println("A nice place to start")
-    println("A nice place to start")
-    println("A nice place to start")
-    println("A nice place to start")
+fun main(args: Array<String>) {
     println("A nice place to start")
 }
