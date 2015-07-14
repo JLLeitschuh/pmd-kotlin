@@ -36,10 +36,14 @@ public class KotlinTokenizer implements Tokenizer {
         KotlinTokenManager tokenMgr = (KotlinTokenManager) languageVersionHandler.getParser(languageVersionHandler.getDefaultParserOptions()).getTokenManager(
                 fileName, new StringReader(src));
 
-        TokenDiscarder discarder = new TokenDiscarder(ignoreAnnotations);
+        TokenDiscarder discarder = new TokenDiscarder(src, ignoreAnnotations);
         IElementType currentToken = (IElementType) tokenMgr.getCurrentToken();
 
         while (currentToken != null) {
+            if (currentToken.equals(JetTokens.IDENTIFIER) && src.substring(tokenMgr.getTokenStart(), tokenMgr.getTokenEnd()).equals("import")) {
+                currentToken = JetTokens.IMPORT_KEYWORD;
+            }
+
             discarder.updateState(currentToken);
             if (!discarder.isDiscarding()) {
                 processToken(tokenEntries, src, fileName, currentToken, tokenMgr.getTokenStart(), tokenMgr.getTokenEnd());
@@ -68,22 +72,23 @@ public class KotlinTokenizer implements Tokenizer {
     }
 
     private static class TokenDiscarder {
-        public TokenDiscarder(boolean ignoreAnnotations) {
+        public TokenDiscarder(String src, boolean ignoreAnnotations) {
             this.ignoreAnnotations = ignoreAnnotations;
 
             discardingSemicolon = false;
-            discardingKeywords = false;
-            discardingAnnotations = false;
             discardingWhiteSpaces = false;
+            discardingComments = false;
 
-            isAnnotation = false;
-            nextTokenEndsAnnotation = false;
-            annotationStack = 0;
+            discardingKeywords = false;
+            expectedIdentifier = false;
+            expectedDot = false;
         }
 
         public void updateState(IElementType currentToken) {
             skipSemicolon(currentToken);
             skipWhiteSpaces(currentToken);
+            skipComments(currentToken);
+            skipPackagesAndImports(currentToken);
         }
 
         private void skipSemicolon(IElementType currentToken) {
@@ -94,21 +99,47 @@ public class KotlinTokenizer implements Tokenizer {
             discardingWhiteSpaces = currentToken.equals(JetTokens.WHITE_SPACE);
         }
 
+        private void skipComments(IElementType currentToken) {
+            discardingComments = currentToken.equals(JetTokens.BLOCK_COMMENT) || currentToken.equals(JetTokens.EOL_COMMENT);
+        }
+
+        private void skipPackagesAndImports(IElementType currentToken) {
+            if (currentToken.equals(JetTokens.PACKAGE_KEYWORD)
+                    || currentToken.equals(JetTokens.IMPORT_KEYWORD)
+                    || currentToken.equals(JetTokens.AS_KEYWORD)) {
+                discardingKeywords = true;
+                expectedIdentifier = true;
+                expectedDot = false;
+            } else if (discardingKeywords && expectedIdentifier && currentToken.equals(JetTokens.IDENTIFIER)) {
+                expectedIdentifier = false;
+                expectedDot = true;
+            } else if (discardingKeywords && expectedIdentifier && currentToken.equals(JetTokens.MUL)) {
+                discardingKeywords = false;
+            } else if (discardingKeywords && expectedDot) {
+                if (currentToken.equals(JetTokens.DOT)) {
+                    expectedIdentifier = true;
+                    expectedDot = false;
+                } else {
+                    discardingKeywords = false;
+                }
+            }
+        }
+
         public boolean isDiscarding() {
-            boolean result = discardingWhiteSpaces || discardingSemicolon || discardingKeywords || discardingAnnotations;
+            boolean result = discardingComments || discardingWhiteSpaces || discardingSemicolon || discardingKeywords;
             return result;
         }
 
-
+        private boolean ignoreAnnotations;
         private boolean isAnnotation;
         private boolean nextTokenEndsAnnotation;
         private int annotationStack;
 
         private boolean discardingSemicolon;
-        private boolean discardingKeywords;
-        private boolean discardingAnnotations;
         private boolean discardingWhiteSpaces;
+        private boolean discardingComments;
 
-        private boolean ignoreAnnotations;
+        private boolean discardingKeywords;
+        private boolean expectedIdentifier, expectedDot;
     }
 }
