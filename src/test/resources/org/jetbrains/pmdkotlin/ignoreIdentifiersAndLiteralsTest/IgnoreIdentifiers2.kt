@@ -2,19 +2,13 @@ fun sum(a : Int, b : Int): Int {
     return a + b
 }
 
-fun mus(x : Int, y : Int) : Int {
-    return y + x
-}
-
-fun testfun(x : Double, y : Char) {
-    var a = 2 * x;
-    var b = 3 * a;
-    val c = 1 * 2 * 3 * 4 * 5;
-    var t = y;
-
-    y = 'a';
-
-    return;
+fun factorial20() : Int {
+    var res = 1
+    for (n in (1..20)) {
+        res *= n
+    }
+    return res
+    // it's another comment
 }
 
 fun my(first : Double, second : Char, f : Int) {

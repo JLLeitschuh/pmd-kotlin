@@ -21,14 +21,15 @@ import java.util.Properties;
 public class KotlinTokenizer implements Tokenizer {
     private boolean ignoreLiterals;
     private boolean ignoreIdentifiers;
-    private boolean ignoreAnnotations;
 
     public void setProperties(Properties properties) {
-        ignoreLiterals = Boolean.parseBoolean(properties.getProperty(IGNORE_LITERALS, "false"));
-        ignoreIdentifiers = Boolean.parseBoolean(properties.getProperty(IGNORE_IDENTIFIERS, "false"));
+        ignoreLiterals = Boolean.parseBoolean(properties.getProperty(IGNORE_LITERALS, "true"));
+        ignoreIdentifiers = Boolean.parseBoolean(properties.getProperty(IGNORE_IDENTIFIERS, "true"));
     }
 
     public void tokenize(SourceCode sourceCode, Tokens tokenEntries) {
+        ignoreIdentifiers = true;
+        ignoreLiterals = true;
         String src = sourceCode.getCodeBuffer().toString();
 
         LanguageVersionHandler languageVersionHandler = LanguageRegistry.getLanguage(KotlinLanguageModule.NAME).getDefaultVersion().getLanguageVersionHandler();
@@ -36,7 +37,7 @@ public class KotlinTokenizer implements Tokenizer {
         KotlinTokenManager tokenMgr = (KotlinTokenManager) languageVersionHandler.getParser(languageVersionHandler.getDefaultParserOptions()).getTokenManager(
                 fileName, new StringReader(src));
 
-        TokenDiscarder discarder = new TokenDiscarder(src, ignoreAnnotations);
+        TokenDiscarder discarder = new TokenDiscarder();
         IElementType currentToken = (IElementType) tokenMgr.getCurrentToken();
 
         while (currentToken != null) {
@@ -55,7 +56,6 @@ public class KotlinTokenizer implements Tokenizer {
 
     private void processToken(Tokens tokenEntries, String src, String fileName, IElementType currentToken, int tokenStart, int tokenEnd) {
         String image = new String(src.substring(tokenStart, tokenEnd));
-        //String image = currentToken.toString();
 
         if (ignoreLiterals
                 && (currentToken.equals(JetTokens.BLOCK_COMMENT)
@@ -71,10 +71,16 @@ public class KotlinTokenizer implements Tokenizer {
         tokenEntries.add(new TokenEntry(image, fileName, tokenStart));
     }
 
-    private static class TokenDiscarder {
-        public TokenDiscarder(String src, boolean ignoreAnnotations) {
-            this.ignoreAnnotations = ignoreAnnotations;
+    public void setIgnoreLiterals(boolean ignore) {
+        this.ignoreLiterals = ignore;
+    }
 
+    public void setIgnoreIdentifiers(boolean ignore) {
+        this.ignoreIdentifiers = ignore;
+    }
+
+    private static class TokenDiscarder {
+        public TokenDiscarder() {
             discardingSemicolon = false;
             discardingWhiteSpaces = false;
             discardingComments = false;
@@ -129,11 +135,6 @@ public class KotlinTokenizer implements Tokenizer {
             boolean result = discardingComments || discardingWhiteSpaces || discardingSemicolon || discardingKeywords;
             return result;
         }
-
-        private boolean ignoreAnnotations;
-        private boolean isAnnotation;
-        private boolean nextTokenEndsAnnotation;
-        private int annotationStack;
 
         private boolean discardingSemicolon;
         private boolean discardingWhiteSpaces;

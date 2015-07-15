@@ -12,3 +12,7 @@ import com.intellij.psi.ClassTypePointerFactory
 fun a(args: Array<String>) {
     println("Hello world")
 }
+
+fun sum2(a : Int, b : Int): Int {
+    return a + b
+}

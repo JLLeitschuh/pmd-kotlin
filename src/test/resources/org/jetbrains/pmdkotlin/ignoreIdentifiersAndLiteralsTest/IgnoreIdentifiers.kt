@@ -1,3 +1,14 @@
+fun testfun(z : Char, x : Double, y : Char) {
+    var a = 2 * x;
+    var b = 3 * a;
+    val c = 1 * 2 * 3 * 4 * 5;
+    var t = y;
+
+    y = 'a';
+
+    return;
+}
+
 fun factorial10() : Int {
     /* it's comment */
     var start = 1
@@ -8,21 +19,7 @@ fun factorial10() : Int {
     return start
 }
 
-fun factorial20() : Int {
-    var res = 1
-    for (n in (1..20)) {
-        res *= n
-    }
-    return res
-    // it's another comment
-}
 
-fun factorial30() : Int {
-    var n = 30
-    var ans = 1
-    for (n in (1..n)) {
-        ans = ans * n
-    }
-
-    return ans
+fun mus(x : Int, y : Int) : Int {
+    return y + x
 }
