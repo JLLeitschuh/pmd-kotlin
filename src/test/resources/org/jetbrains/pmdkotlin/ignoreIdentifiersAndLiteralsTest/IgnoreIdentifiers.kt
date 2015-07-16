@@ -1,4 +1,4 @@
-fun testfun(z : Char, x : Double, y : Char) {
+fun testfun(z : Double, x : Char, y : Int) {
     var a = 2 * x;
     var b = 3 * a;
     val c = 1 * 2 * 3 * 4 * 5;

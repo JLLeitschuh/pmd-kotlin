@@ -28,7 +28,7 @@ public class CpdTest {
         config = new CPDConfiguration();
         config.setLanguage(new KotlinLanguage());
         config.setEncoding("UTF-8");
-        config.setMinimumTileSize(15);
+        config.setMinimumTileSize(10);
         config.setIgnoreIdentifiers(true);
         config.setIgnoreLiterals(true);
         cpd = new CPD(config);
@@ -36,14 +36,13 @@ public class CpdTest {
         cpd.setCpdListener(listener);
     }
 
-//    @Test
-//    public void testDuplicateFunction() throws IOException {
-//        cpd.add(getKotlinFile("DuplicateFunction.kt"));
-//        cpd.go();
-//
-//        show(cpd.getMatches());
-//
-//    }
+    @Test
+    public void testDuplicateFunction() throws IOException {
+        cpd.add(getKotlinFile("DuplicateFunction.kt"));
+        cpd.go();
+
+        show(cpd.getMatches());
+    }
 
 //    @Test
 //    public void testIgnoreImports() throws IOException {
@@ -75,15 +74,15 @@ public class CpdTest {
         while (matches.hasNext()) {
             Match match = matches.next();
             for (Mark m : match.getMarkSet()) {
-                m.setSoureCodeSlice(hm.get(m.getFilename()).substring(m.getBeginLine(), m.getEndLine()));
+                m.setSoureCodeSlice(hm.get(m.getFilename()).substring(m.getBeginLine(), m.getEndLine() + 1));
                 pw.println(m.getFilename());
                 pw.println(m.getSourceCodeSlice());
             }
-            //pw.println(match.getSourceCodeSlice());
             pw.println();
             pw.println();
         }
         pw.close();
+
     }
 
     private File getKotlinFile(String name) {

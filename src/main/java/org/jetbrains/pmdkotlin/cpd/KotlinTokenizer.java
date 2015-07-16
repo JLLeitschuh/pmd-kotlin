@@ -22,14 +22,26 @@ public class KotlinTokenizer implements Tokenizer {
     private boolean ignoreLiterals;
     private boolean ignoreIdentifiers;
 
+
+    private static final String intType = "Int";
+    private static final String longType = "Long";
+    private static final String doubleType = "Double";
+    private static final String floatType = "Float";
+    private static final String shortType = "Short";
+    private static final String byteType = "Byte";
+    private static final String boolType = "Boolean";
+    private static final String charType = "Char";
+    private static final String stringType = "String";
+    private static final String arrayType = "Array";
+
     public void setProperties(Properties properties) {
         ignoreLiterals = Boolean.parseBoolean(properties.getProperty(IGNORE_LITERALS, "true"));
         ignoreIdentifiers = Boolean.parseBoolean(properties.getProperty(IGNORE_IDENTIFIERS, "true"));
     }
 
     public void tokenize(SourceCode sourceCode, Tokens tokenEntries) {
-        ignoreIdentifiers = true;
-        ignoreLiterals = true;
+        //ignoreIdentifiers = true;
+        //ignoreLiterals = true;
         String src = sourceCode.getCodeBuffer().toString();
 
         LanguageVersionHandler languageVersionHandler = LanguageRegistry.getLanguage(KotlinLanguageModule.NAME).getDefaultVersion().getLanguageVersionHandler();
@@ -57,17 +69,28 @@ public class KotlinTokenizer implements Tokenizer {
     private void processToken(Tokens tokenEntries, String src, String fileName, IElementType currentToken, int tokenStart, int tokenEnd) {
         String image = new String(src.substring(tokenStart, tokenEnd));
 
-        if (ignoreLiterals
-                && (currentToken.equals(JetTokens.BLOCK_COMMENT)
+        boolean isBasicType = image.equals(intType)
+                || image.equals(longType)
+                || image.equals(doubleType)
+                || image.equals(floatType)
+                || image.equals(shortType)
+                || image.equals(byteType)
+                || image.equals(boolType)
+                || image.equals(charType)
+                || image.equals(stringType)
+                || image.equals(arrayType);
+
+
+        boolean isLiteral = (currentToken.equals(JetTokens.BLOCK_COMMENT)
                 || currentToken.equals(JetTokens.CHARACTER_LITERAL)
                 || currentToken.equals(JetTokens.INTEGER_LITERAL)
-                || currentToken.equals(JetTokens.FLOAT_LITERAL))) {
+                || currentToken.equals(JetTokens.FLOAT_LITERAL));
+
+        if ((currentToken.equals(JetTokens.IDENTIFIER) && (ignoreLiterals && !isBasicType))
+                || (isLiteral && ignoreLiterals)) {
             image = currentToken.toString();
         }
 
-        if (ignoreIdentifiers && currentToken.equals(JetTokens.IDENTIFIER)) {
-            image = currentToken.toString();
-        }
         tokenEntries.add(new TokenEntry(image, fileName, tokenStart));
     }
 
