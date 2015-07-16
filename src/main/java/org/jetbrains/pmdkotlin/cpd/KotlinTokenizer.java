@@ -35,13 +35,11 @@ public class KotlinTokenizer implements Tokenizer {
     private static final String arrayType = "Array";
 
     public void setProperties(Properties properties) {
-        ignoreLiterals = Boolean.parseBoolean(properties.getProperty(IGNORE_LITERALS, "true"));
-        ignoreIdentifiers = Boolean.parseBoolean(properties.getProperty(IGNORE_IDENTIFIERS, "true"));
+        ignoreLiterals = Boolean.parseBoolean(properties.getProperty(IGNORE_LITERALS, "false"));
+        ignoreIdentifiers = Boolean.parseBoolean(properties.getProperty(IGNORE_IDENTIFIERS, "false"));
     }
 
     public void tokenize(SourceCode sourceCode, Tokens tokenEntries) {
-        //ignoreIdentifiers = true;
-        //ignoreLiterals = true;
         String src = sourceCode.getCodeBuffer().toString();
 
         LanguageVersionHandler languageVersionHandler = LanguageRegistry.getLanguage(KotlinLanguageModule.NAME).getDefaultVersion().getLanguageVersionHandler();
