@@ -7,9 +7,6 @@ import net.sourceforge.pmd.cpd.Tokenizer;
 import net.sourceforge.pmd.cpd.Tokens;
 import net.sourceforge.pmd.lang.LanguageRegistry;
 import net.sourceforge.pmd.lang.LanguageVersionHandler;
-import net.sourceforge.pmd.lang.TokenManager;
-import org.jetbrains.kotlin.lexer.JetSingleValueToken;
-import org.jetbrains.kotlin.lexer.JetToken;
 import org.jetbrains.kotlin.lexer.JetTokens;
 import org.jetbrains.pmdkotlin.lang.kotlin.KotlinLanguageModule;
 import org.jetbrains.pmdkotlin.lang.kotlin.KotlinTokenManager;
@@ -35,8 +32,8 @@ public class KotlinTokenizer implements Tokenizer {
     private static final String arrayType = "Array";
 
     public void setProperties(Properties properties) {
-        ignoreLiterals = Boolean.parseBoolean(properties.getProperty(IGNORE_LITERALS, "false"));
-        ignoreIdentifiers = Boolean.parseBoolean(properties.getProperty(IGNORE_IDENTIFIERS, "false"));
+        ignoreLiterals = Boolean.parseBoolean(properties.getProperty(IGNORE_LITERALS, "true"));
+        ignoreIdentifiers = Boolean.parseBoolean(properties.getProperty(IGNORE_IDENTIFIERS, "true"));
     }
 
     public void tokenize(SourceCode sourceCode, Tokens tokenEntries) {
@@ -55,7 +52,7 @@ public class KotlinTokenizer implements Tokenizer {
                 currentToken = JetTokens.IMPORT_KEYWORD;
             }
 
-            discarder.updateState(currentToken);
+            //discarder.updateState(currentToken);
             if (!discarder.isDiscarding()) {
                 processToken(tokenEntries, src, fileName, currentToken, tokenMgr.getTokenStart(), tokenMgr.getTokenEnd());
             }

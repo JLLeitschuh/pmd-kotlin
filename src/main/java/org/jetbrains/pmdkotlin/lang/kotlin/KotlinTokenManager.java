@@ -1,10 +1,10 @@
 package org.jetbrains.pmdkotlin.lang.kotlin;
 
-import com.intellij.psi.tree.IElementType;
 import net.sourceforge.pmd.lang.TokenManager;
-import org.jetbrains.kotlin.lexer.JetTokens;
 import org.apache.commons.io.IOUtils;
 import org.jetbrains.kotlin.lexer.JetLexer;
+import org.jetbrains.kotlin.lexer.JetTokens;
+
 import java.io.IOException;
 import java.io.Reader;
 
