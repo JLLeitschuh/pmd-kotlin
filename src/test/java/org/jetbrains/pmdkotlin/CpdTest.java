@@ -1,14 +1,14 @@
 package org.jetbrains.pmdkotlin;
 
 import net.sourceforge.pmd.cpd.*;
+import net.sourceforge.pmd.lang.ParserOptions;
 import org.jetbrains.pmdkotlin.cpd.KotlinLanguage;
+import org.jetbrains.pmdkotlin.lang.kotlin.KotlinParser;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -35,14 +35,21 @@ public class CpdTest {
         listener = mock(CPDListener.class);
         cpd.setCpdListener(listener);
     }
+  @Test
+  public void testParser() throws FileNotFoundException, URISyntaxException {
+      KotlinParser parser = new KotlinParser(new ParserOptions());
+      String filepath = "/home/user/pmd-kotlin/build/resources/test/org/jetbrains/pmdkotlin/DuplicateFunction.kt";
+      parser.parse(filepath, new FileReader(filepath));
+  }
 
-    @Test
-    public void testDuplicateFunction() throws IOException {
-        cpd.add(getKotlinFile("DuplicateFunction.kt"));
-        cpd.go();
-
-        show(cpd.getMatches());
-    }
+//    @Test
+//    public void testDuplicateFunction() throws IOException {
+//        cpd.add(getKotlinFile("DuplicateFunction.kt"));
+//        cpd.go();
+//
+//        show(cpd.getMatches());
+//
+//    }
 
 //    @Test
 //    public void testIgnoreImports() throws IOException {
@@ -53,16 +60,15 @@ public class CpdTest {
 //
 //        show(cpd.getMatches());
 //    }
-
-    @Test
-    public void testIgnoreIdentifiersAndLiterals() throws IOException {
-        cpd.add(getKotlinFile("ignoreIdentifiersAndLiteralsTest/IgnoreIdentifiers.kt"));
-        cpd.add(getKotlinFile("ignoreIdentifiersAndLiteralsTest/IgnoreIdentifiers2.kt"));
-
-        cpd.go();
-
-        show(cpd.getMatches());
-    }
+//
+//    @Test
+//    public void testIgnoreIdentifiersAndLiterals() throws IOException {
+//        cpd.add(getKotlinFile("ignoreIdentifiersAndLiteralsTest/IgnoreIdentifiers.kt"));
+//        cpd.add(getKotlinFile("ignoreIdentifiersAndLiteralsTest/IgnoreIdentifiers2.kt"));
+//
+//        cpd.go();
+//        show(cpd.getMatches());
+//    }
 
     public void show(Iterator<Match> matches) throws FileNotFoundException {
         PrintWriter pw = new PrintWriter("test_results.txt");

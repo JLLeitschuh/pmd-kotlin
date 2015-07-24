@@ -9,8 +9,12 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.local.CoreLocalFileSystem;
 import com.intellij.psi.FileViewProvider;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
+import com.intellij.psi.impl.source.tree.FileElement;
+import com.intellij.psi.tree.IElementType;
+import com.intellij.psi.tree.TokenSet;
 import net.sourceforge.pmd.lang.AbstractParser;
 import net.sourceforge.pmd.lang.ParserOptions;
 import net.sourceforge.pmd.lang.TokenManager;
@@ -23,8 +27,12 @@ import org.jetbrains.kotlin.config.CompilerConfiguration;
 import org.jetbrains.kotlin.lexer.JetLexer;
 import org.jetbrains.kotlin.parsing.JetParser;
 import org.jetbrains.kotlin.parsing.JetParserDefinition;
+import org.jetbrains.kotlin.psi.JetFile;
+import org.jetbrains.kotlin.psi.stubs.elements.JetFileElementType;
 import org.jetbrains.pmdkotlin.lang.kotlin.ast.AbstractKotlinNode;
+import org.jetbrains.pmdkotlin.lang.kotlin.ast.KotlinNodeAdapter;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.HashMap;
@@ -58,9 +66,18 @@ public class KotlinParser extends AbstractParser {
         return true;
     }
 
+    private void showTree(ASTNode v, String s) {
+        //System.err.println(s + v.getClass());
+        if (!(v instanceof FileElement)) {
+            System.err.println(s + v.getPsi().getClass());
+        }
+        for (ASTNode cv : v.getChildren((TokenSet) null)) {
+            showTree(cv, s + " ");
+        }
+    }
+
     @Override
     public AbstractKotlinNode parse(String fileName, Reader source) throws ParseException {
-
         VirtualFile vf = new CoreLocalFileSystem().findFileByPath(fileName);
         FileViewProvider provider = manager.findViewProvider(vf);
         PsiFile file = parserDefinition.createFile(provider);
@@ -73,8 +90,11 @@ public class KotlinParser extends AbstractParser {
 
         PsiBuilder builder = new PsiBuilderImpl(project, file, parserDefinition, new JetLexer(), null, s, null, null);
 
-        ASTNode root = new JetParser(project).parse(JetNodeTypes.JET_FILE, builder, file);
-        return null;
+        ASTNode root = parser.parse(JetNodeTypes.JET_FILE, builder, file);
+        showTree(root, "");
+//        FileElement fe;
+//        fe.acceptTree();
+        return new KotlinNodeAdapter(root);
     }
 
     @Override
