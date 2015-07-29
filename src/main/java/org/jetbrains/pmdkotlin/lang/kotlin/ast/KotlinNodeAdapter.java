@@ -2,18 +2,13 @@ package org.jetbrains.pmdkotlin.lang.kotlin.ast;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.impl.source.tree.CompositeElement;
 import com.intellij.psi.impl.source.tree.FileElement;
-import com.intellij.psi.tree.TokenSet;
-import net.sourceforge.pmd.lang.ast.AbstractNode;
 import net.sourceforge.pmd.lang.ast.Node;
 import net.sourceforge.pmd.lang.dfa.DataFlowNode;
 import org.jaxen.JaxenException;
-import org.jetbrains.kotlin.psi.JetElement;
 import org.jetbrains.pmdkotlin.lang.kotlin.KotlinParser;
 import org.w3c.dom.Document;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,10 +44,11 @@ public class KotlinNodeAdapter implements AbstractKotlinNode {
     @Override
     public Object jjtAccept(KotlinParserVisitor visitor, Object data) {
         if (innerNode instanceof FileElement) {
-            // (FileElement)((FileElement) innerNode).acceptTree(visitor);
+
             return null;
         } else {
-            innerNode.getPsi().accept((KotlinParserVisitorAdapter) visitor);
+//            innerNode.getPsi().accept((KotlinParserVisitorAdapter) visitor);
+            innerNode.getPsi().accept(visitor.INNER_VISITOR);
         }
         return data;
     }
@@ -64,7 +60,7 @@ public class KotlinNodeAdapter implements AbstractKotlinNode {
                 children[i].jjtAccept(visitor, data);
             }
         } else {
-            innerNode.getPsi().acceptChildren((KotlinParserVisitorAdapter) visitor);
+            innerNode.getPsi().acceptChildren(visitor.INNER_VISITOR);
         }
         return data;
     }
@@ -255,7 +251,7 @@ public class KotlinNodeAdapter implements AbstractKotlinNode {
             childrenPropagation();
         }
         for (int i = 0; i < children.length; i++) {
-            if (children[i].getClass() == childType) {
+            if (children[i].getPsiClass() == childType) {
                 chnodes.add((T) children[i]);
             }
         }
@@ -294,7 +290,7 @@ public class KotlinNodeAdapter implements AbstractKotlinNode {
         }
 
         for (int i = 0; i < children.length; i++) {
-            if (children[i].getClass() == childType) {
+            if (children[i].getPsiClass() == childType) {
                 return (T) children[i];
             }
         }

@@ -1,0 +1,82 @@
+<?xml version="1.0"?>
+
+<ruleset name="Empty Code"
+         xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 http://pmd.sourceforge.net/ruleset_2_0_0.xsd">
+    <description>
+        The Empty Code ruleset contains rules that find empty statements of any kind (empty method,
+        empty block statement, empty try or catch block,...).
+    </description>
+
+    <rule name="EmptyTryBlock"
+          language="kotlin"
+          message="Avoid empty try blocks"
+          class="org.jetbrains.pmdkotlin.lang.kotlin.rule.empty.EmptyTryBlock">
+
+        <description>
+            Avoid empty try blocks - what's the point?
+        </description>
+
+        <priority>3</priority>
+
+        <example>
+            <![CDATA[
+            ]]>
+        </example>
+    </rule>
+
+
+    <rule name="EmptyCatchBlock"
+          language="kotlin"
+          message="Avoid empty catch blocks"
+          class="org.jetbrains.pmdkotlin.lang.kotlin.rule.empty.EmptyCatchBlock">
+
+        <description>
+            Empty Catch Block finds instances where an exception is caught,
+            but nothing is done.  In most circumstances, this swallows an exception
+            which should either be acted on or reported.
+        </description>
+
+        <priority>3</priority>
+
+        <example>
+            <![CDATA[
+            ]]>
+        </example>
+    </rule>
+
+    <rule name="EmptyFinallyBlock"
+          language="kotlin"
+          message="Avoid empty finally blocks"
+          class="org.jetbrains.pmdkotlin.lang.kotlin.rule.empty.EmptyFinallyBlock">
+        <description>
+            Empty finally blocks serve no purpose and should be removed.
+        </description>
+
+        <priority>3</priority>
+
+        <example>
+            <![CDATA[
+            ]]>
+        </example>
+    </rule>
+
+    <rule name="EmptyIfStatement"
+          language="kotlin"
+          message="Avoid empty 'if' statements"
+          class="org.jetbrains.pmdkotlin.lang.kotlin.rule.empty.EmptyIfStatement">
+
+        <description>
+            Empty If Statement finds instances where a condition is checked but nothing is done about it.
+        </description>
+
+        <priority>3</priority>
+
+        <example>
+            <![CDATA[
+            ]]>
+        </example>
+    </rule>
+
+</ruleset>

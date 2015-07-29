@@ -13,7 +13,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.impl.source.tree.FileElement;
-import com.intellij.psi.tree.IElementType;
+import com.intellij.psi.impl.source.tree.PsiWhiteSpaceImpl;
 import com.intellij.psi.tree.TokenSet;
 import net.sourceforge.pmd.lang.AbstractParser;
 import net.sourceforge.pmd.lang.ParserOptions;
@@ -25,14 +25,14 @@ import org.jetbrains.kotlin.cli.jvm.compiler.EnvironmentConfigFiles;
 import org.jetbrains.kotlin.cli.jvm.compiler.KotlinCoreEnvironment;
 import org.jetbrains.kotlin.config.CompilerConfiguration;
 import org.jetbrains.kotlin.lexer.JetLexer;
+import org.jetbrains.kotlin.lexer.JetTokens;
 import org.jetbrains.kotlin.parsing.JetParser;
 import org.jetbrains.kotlin.parsing.JetParserDefinition;
-import org.jetbrains.kotlin.psi.JetFile;
-import org.jetbrains.kotlin.psi.stubs.elements.JetFileElementType;
+import org.jetbrains.kotlin.psi.JetBlockExpression;
+import org.jetbrains.kotlin.psi.JetCatchClause;
 import org.jetbrains.pmdkotlin.lang.kotlin.ast.AbstractKotlinNode;
 import org.jetbrains.pmdkotlin.lang.kotlin.ast.KotlinNodeAdapter;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.HashMap;
@@ -69,10 +69,22 @@ public class KotlinParser extends AbstractParser {
     private void showTree(ASTNode v, String s) {
         //System.err.println(s + v.getClass());
         if (!(v instanceof FileElement)) {
-            System.err.println(s + v.getPsi().getClass());
+            PsiElement psi = v.getPsi();
+            if (psi instanceof JetCatchClause) {
+                for (ASTNode p : v.getChildren(null)) {
+                    if (p.getPsi() instanceof JetBlockExpression) {
+                        PsiElement pp = p.getPsi();
+                        for(PsiElement child = pp.getFirstChild(); child != null; child = child.getNextSibling()) {
+                            System.out.println(child.getClass());
+                        }
+                    }
+                }
+//                System.out.println(((JetCatchClause) psi).getCatchBody().getClass());
+            }
+            //System.err.println(s + v.getPsi().getClass());
         }
-        for (ASTNode cv : v.getChildren((TokenSet) null)) {
-            showTree(cv, s + " ");
+        for (ASTNode cv : v.getChildren(null)) {
+            showTree(cv, s + "  ");
         }
     }
 
@@ -92,8 +104,7 @@ public class KotlinParser extends AbstractParser {
 
         ASTNode root = parser.parse(JetNodeTypes.JET_FILE, builder, file);
         showTree(root, "");
-//        FileElement fe;
-//        fe.acceptTree();
+
         return new KotlinNodeAdapter(root);
     }
 

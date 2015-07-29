@@ -1,5 +1,6 @@
 package org.jetbrains.pmdkotlin;
 
+import net.sourceforge.pmd.PMD;
 import net.sourceforge.pmd.cpd.*;
 import net.sourceforge.pmd.lang.ParserOptions;
 import org.jetbrains.pmdkotlin.cpd.KotlinLanguage;
@@ -17,7 +18,6 @@ import java.util.Map;
 import static org.mockito.Mockito.mock;
 
 public class CpdTest {
-
     private CPD cpd;
     private CPDConfiguration config;
     private CPDListener listener;
