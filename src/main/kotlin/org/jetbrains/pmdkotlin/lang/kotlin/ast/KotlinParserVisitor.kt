@@ -438,7 +438,7 @@ public interface KotlinParserVisitor {
 
     public fun visitJetElementPMD(element: JetElement, data: Any?): Any? {
         visitElementPMD(element)
-        return null
+        return data
     }
 
     public fun visitDeclarationPMD(dcl: JetDeclaration, data: Any?): Any? {

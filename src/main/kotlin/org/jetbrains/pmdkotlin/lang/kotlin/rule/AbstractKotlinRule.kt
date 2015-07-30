@@ -20,6 +20,7 @@ public open class AbstractKotlinRule : AbstractRule(), KotlinParserVisitor, Immu
     }
 
     override fun apply(nodes: List<Node>, ctx: RuleContext) {
+        savedData = ctx
         visitAll(nodes, ctx)
     }
 
@@ -35,4 +36,6 @@ public open class AbstractKotlinRule : AbstractRule(), KotlinParserVisitor, Immu
         (node as AbstractKotlinNode).childrenAccept(this, data)
         return data
     }
+
+    protected var savedData: Any? = null
 }

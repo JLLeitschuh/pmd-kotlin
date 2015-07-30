@@ -23,6 +23,6 @@ public class PmdTest {
         config.setDefaultLanguageVersion(new KotlinLanguageModule().getDefaultVersion());
 
         int x = PMD.doPMD(config);
-        System.err.println(x);
+        assert (x == 3);
     }
 }

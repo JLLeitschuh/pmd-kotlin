@@ -79,4 +79,40 @@
         </example>
     </rule>
 
+    <rule name="EmptyLoopStatement"
+          language="kotlin"
+          message="Avoid empty loop statements"
+          class="org.jetbrains.pmdkotlin.lang.kotlin.rule.empty.EmptyLoopStatement">
+
+        <description>
+            Empty Loop Statement finds all instances where a loop statement does nothing.
+            If it is a timing loop, then you should use Thread.sleep() for it; if it is
+            a while loop that does a lot in the exit expression, rewrite it to make it clearer.
+        </description>
+
+        <priority>3</priority>
+
+        <example>
+            <![CDATA[
+            ]]>
+        </example>
+    </rule>
+
+    <rule name="EmptyWhenStatement"
+          language="kotlin"
+          message="Avoid empty when statements"
+          class="org.jetbrains.pmdkotlin.lang.kotlin.rule.empty.EmptyWhenStatement">
+
+        <description>
+            Empty when statements serve no purpose and should be removed.
+        </description>
+
+        <priority>3</priority>
+
+        <example>
+            <![CDATA[
+            ]]>
+        </example>
+    </rule>
+
 </ruleset>

@@ -6,6 +6,7 @@ import com.intellij.psi.impl.source.tree.FileElement;
 import net.sourceforge.pmd.lang.ast.Node;
 import net.sourceforge.pmd.lang.dfa.DataFlowNode;
 import org.jaxen.JaxenException;
+import org.jetbrains.kotlin.psi.JetElement;
 import org.jetbrains.pmdkotlin.lang.kotlin.KotlinParser;
 import org.w3c.dom.Document;
 
@@ -43,8 +44,8 @@ public class KotlinNodeAdapter implements AbstractKotlinNode {
 
     @Override
     public Object jjtAccept(KotlinParserVisitor visitor, Object data) {
-        if (innerNode instanceof FileElement) {
-            return null;
+        if (innerNode instanceof JetElement) {
+            return ((JetElement) innerNode.getPsi()).accept(visitor.toJetVisitor(), data);
         } else {
             innerNode.getPsi().accept(visitor.toJetVisitor());
         }

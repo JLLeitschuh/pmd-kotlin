@@ -1,5 +1,6 @@
 package org.jetbrains.pmdkotlin.lang.kotlin.rule.empty;
 
+import net.sourceforge.pmd.RuleContext;
 import org.jetbrains.kotlin.psi.JetCatchClause;
 import org.jetbrains.kotlin.psi.JetLoopExpression;
 import org.jetbrains.pmdkotlin.lang.kotlin.ast.KotlinNodeAdapter;
@@ -11,7 +12,7 @@ public class EmptyLoopStatement extends AbstractKotlinRule {
     @Override
     public Object visitLoopExpressionPMD(JetLoopExpression node, Object data) {
         if (isEmptyBlock(node.getBody())) {
-            addViolation(data, new KotlinNodeAdapter(node.getNode()));
+            addViolation(getSavedData(), new KotlinNodeAdapter(node.getNode()));
         }
         return super.visitLoopExpressionPMD(node, data);
     }

@@ -93,7 +93,7 @@ public class KotlinParser extends AbstractParser {
         PsiBuilder builder = new PsiBuilderImpl(project, file, parserDefinition, new JetLexer(), null, s, null, null);
 
         ASTNode root = parser.parse(JetNodeTypes.JET_FILE, builder, file);
-        showTree(root, "");
+//        showTree(root, "");
 
         return new KotlinNodeAdapter(root);
     }
