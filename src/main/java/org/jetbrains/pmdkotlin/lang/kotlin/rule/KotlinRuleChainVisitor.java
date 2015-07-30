@@ -5,6 +5,7 @@ import net.sourceforge.pmd.RuleContext;
 import net.sourceforge.pmd.lang.ast.Node;
 import net.sourceforge.pmd.lang.rule.AbstractRuleChainVisitor;
 import org.jetbrains.pmdkotlin.lang.kotlin.ast.AbstractKotlinNode;
+import org.jetbrains.pmdkotlin.lang.kotlin.ast.KotlinParserVisitor;
 import org.jetbrains.pmdkotlin.lang.kotlin.ast.KotlinParserVisitorAdapter;
 
 import java.util.List;
@@ -20,6 +21,11 @@ public class KotlinRuleChainVisitor extends AbstractRuleChainVisitor{
 
     @Override
     protected void indexNodes(List<Node> nodes, RuleContext ctx) {
-        return;
+        KotlinParserVisitorAdapter visitor = new KotlinParserVisitorAdapter();
+
+        for (int i = 0; i < nodes.size(); i++) {
+            visitor.visit(nodes.get(i), ctx);
+        }
+
     }
 }

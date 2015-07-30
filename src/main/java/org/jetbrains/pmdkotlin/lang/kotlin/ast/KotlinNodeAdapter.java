@@ -44,25 +44,29 @@ public class KotlinNodeAdapter implements AbstractKotlinNode {
     @Override
     public Object jjtAccept(KotlinParserVisitor visitor, Object data) {
         if (innerNode instanceof FileElement) {
-
             return null;
         } else {
-//            innerNode.getPsi().accept((KotlinParserVisitorAdapter) visitor);
-            innerNode.getPsi().accept(visitor.INNER_VISITOR);
+            innerNode.getPsi().accept(visitor.toJetVisitor());
         }
         return data;
     }
 
     @Override
     public Object childrenAccept(KotlinParserVisitor visitor, Object data) {
+        childrenPropagation();
         if (innerNode instanceof FileElement) {
             for (int i = 0; i < children.length; i++) {
                 children[i].jjtAccept(visitor, data);
             }
         } else {
-            innerNode.getPsi().acceptChildren(visitor.INNER_VISITOR);
+            innerNode.getPsi().acceptChildren(visitor.toJetVisitor());
         }
         return data;
+    }
+
+    @Override
+    public ASTNode getInnerNode() {
+        return innerNode;
     }
 
     @Override
@@ -110,9 +114,8 @@ public class KotlinNodeAdapter implements AbstractKotlinNode {
     //Not effective
     @Override
     public void jjtAddChild(Node child, int index) {
-        if (children == null) {
-            childrenPropagation();
-        } else if (index >= children.length) {
+        childrenPropagation();
+        if (index >= children.length) {
             KotlinNodeAdapter[] newChildren = new KotlinNodeAdapter[index + 1];
             System.arraycopy(children, 0, newChildren, 0, children.length);
             children = newChildren;
@@ -122,9 +125,7 @@ public class KotlinNodeAdapter implements AbstractKotlinNode {
     }
 
     public KotlinNodeAdapter[] getChildren() {
-        if (children == null) {
-            childrenPropagation();
-        }
+        childrenPropagation();
 
         return children;
     }

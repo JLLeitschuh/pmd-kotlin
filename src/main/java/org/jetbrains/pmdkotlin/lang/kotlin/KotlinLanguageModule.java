@@ -8,7 +8,7 @@ public class KotlinLanguageModule extends BaseLanguageModule{
     public static final String TERSE_NAME = "kotlin";
 
     public KotlinLanguageModule() {
-        super(NAME, null, TERSE_NAME, KotlinRuleChainVisitor.class);
+        super(NAME, null, TERSE_NAME, KotlinRuleChainVisitor.class, "kt");
         addVersion("0.12", new KotlinHandler(), true);
     }
 

@@ -1,6 +1,7 @@
 package org.jetbrains.pmdkotlin.lang.kotlin.rule
 
 import com.intellij.psi.PsiElement
+import com.intellij.psi.impl.source.tree.FileElement
 import net.sourceforge.pmd.RuleContext
 import net.sourceforge.pmd.lang.LanguageRegistry
 import net.sourceforge.pmd.lang.ast.Node
@@ -25,11 +26,12 @@ public open class AbstractKotlinRule : AbstractRule(), KotlinParserVisitor, Immu
     protected fun visitAll(nodes: List<Node>, ctx: RuleContext) {
         for (element in nodes) {
             val node = element as KotlinNodeAdapter
-            visit(node.getPsi(), ctx)
+
+            visit(node, ctx)
         }
     }
 
-    public fun visit(node: PsiElement, data: Any): Any? {
+    public fun visit(node: Node, data: Any): Any? {
         (node as AbstractKotlinNode).childrenAccept(this, data)
         return data
     }

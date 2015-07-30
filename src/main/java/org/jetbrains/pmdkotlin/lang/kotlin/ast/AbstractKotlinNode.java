@@ -1,5 +1,6 @@
 package org.jetbrains.pmdkotlin.lang.kotlin.ast;
 
+import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import net.sourceforge.pmd.lang.ast.Node;
 
@@ -10,5 +11,6 @@ public interface AbstractKotlinNode extends Node {
 
     PsiElement getPsi();
 
+    ASTNode getInnerNode();
     <T> Class<T> getPsiClass();
 }

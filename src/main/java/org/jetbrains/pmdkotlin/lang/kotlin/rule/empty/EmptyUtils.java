@@ -3,6 +3,7 @@ package org.jetbrains.pmdkotlin.lang.kotlin.rule.empty;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.impl.source.tree.PsiCoreCommentImpl;
 import com.intellij.psi.impl.source.tree.PsiWhiteSpaceImpl;
+import org.jetbrains.kotlin.lexer.JetTokens;
 import org.jetbrains.kotlin.psi.JetExpression;
 
 public class EmptyUtils {

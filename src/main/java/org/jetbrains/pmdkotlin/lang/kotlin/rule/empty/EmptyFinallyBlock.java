@@ -8,10 +8,10 @@ import static org.jetbrains.pmdkotlin.lang.kotlin.rule.empty.EmptyUtils.isEmptyB
 
 public class EmptyFinallyBlock extends AbstractKotlinRule {
     @Override
-    public Object visitFinallySection(JetFinallySection node, Object data) {
+    public Object visitFinallySectionPMD(JetFinallySection node, Object data) {
         if (isEmptyBlock(node.getFinalExpression())) {
             addViolation(data, new KotlinNodeAdapter(node.getNode()));
         }
-        return super.visit(node, data);
+        return super.visitFinallySectionPMD(node, data);
     }
 }

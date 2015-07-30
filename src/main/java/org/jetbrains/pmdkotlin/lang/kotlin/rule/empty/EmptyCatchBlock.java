@@ -8,10 +8,10 @@ import static org.jetbrains.pmdkotlin.lang.kotlin.rule.empty.EmptyUtils.isEmptyB
 
 public class EmptyCatchBlock extends AbstractKotlinRule {
     @Override
-    public Object visitCatchSection(JetCatchClause node, Object data) {
+    public Object visitCatchSectionPMD(JetCatchClause node, Object data) {
         if (isEmptyBlock(node.getCatchBody())) {
             addViolation(data, new KotlinNodeAdapter(node.getNode()));
         }
-        return super.visit(node, data);
+        return super.visitCatchSectionPMD(node, data);
     }
 }

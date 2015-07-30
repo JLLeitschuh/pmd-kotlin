@@ -8,10 +8,10 @@ import static org.jetbrains.pmdkotlin.lang.kotlin.rule.empty.EmptyUtils.isEmptyB
 
 public class EmptyIfStatement extends AbstractKotlinRule {
     @Override
-    public Object visitIfExpression(JetIfExpression node, Object data) {
+    public Object visitIfExpressionPMD(JetIfExpression node, Object data) {
         if (isEmptyBlock(node.getThen()) || isEmptyBlock(node.getElse())) {
             addViolation(data, new KotlinNodeAdapter(node.getNode()));
         }
-        return super.visit(node, data);
+        return super.visitIfExpressionPMD(node, data);
     }
 }

@@ -70,18 +70,8 @@ public class KotlinParser extends AbstractParser {
         //System.err.println(s + v.getClass());
         if (!(v instanceof FileElement)) {
             PsiElement psi = v.getPsi();
-            if (psi instanceof JetCatchClause) {
-                for (ASTNode p : v.getChildren(null)) {
-                    if (p.getPsi() instanceof JetBlockExpression) {
-                        PsiElement pp = p.getPsi();
-                        for(PsiElement child = pp.getFirstChild(); child != null; child = child.getNextSibling()) {
-                            System.out.println(child.getClass());
-                        }
-                    }
-                }
-//                System.out.println(((JetCatchClause) psi).getCatchBody().getClass());
-            }
-            //System.err.println(s + v.getPsi().getClass());
+
+            System.err.println(s + v.getPsi().getClass());
         }
         for (ASTNode cv : v.getChildren(null)) {
             showTree(cv, s + "  ");

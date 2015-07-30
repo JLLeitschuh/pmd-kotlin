@@ -1,13 +1,7 @@
-package org.jetbrains.pmdkotlin.emptyCodeTests
-
-fun main(args: Array<String>) {
+fun main() {
     try {
-
+        
     } catch (e: Exception) {
 
-    } finally {
-
     }
-
-    System.out.println("Finish")
 }

@@ -8,11 +8,11 @@ import static org.jetbrains.pmdkotlin.lang.kotlin.rule.empty.EmptyUtils.isEmptyB
 
 public class EmptyTryBlock extends AbstractKotlinRule {
     @Override
-    public Object visitTryExpression(JetTryExpression node, Object data) {
+    public Object visitTryExpressionPMD(JetTryExpression node, Object data) {
         if (isEmptyBlock(node.getTryBlock())) {
             addViolation(data, new KotlinNodeAdapter(node.getNode()));
         }
-        return super.visit(node, data);
+        return super.visitTryExpressionPMD(node, data);
     }
 
 

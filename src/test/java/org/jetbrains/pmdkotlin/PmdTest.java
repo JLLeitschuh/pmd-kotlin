@@ -6,8 +6,6 @@ import org.jetbrains.pmdkotlin.lang.kotlin.KotlinLanguageModule;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
-import java.io.File;
-import java.net.URISyntaxException;
 
 public class PmdTest {
 
@@ -24,6 +22,7 @@ public class PmdTest {
         config.setThreads(0);
         config.setDefaultLanguageVersion(new KotlinLanguageModule().getDefaultVersion());
 
-        PMD.doPMD(config);
+        int x = PMD.doPMD(config);
+        System.err.println(x);
     }
 }
