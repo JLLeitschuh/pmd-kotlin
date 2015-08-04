@@ -13,8 +13,6 @@ import org.w3c.dom.Document;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.lang.Math.max;
-
 public class KotlinNodeAdapter implements AbstractKotlinNode {
     protected int id;
     protected KotlinParser parser;

@@ -11,5 +11,6 @@ public class SemicolonRule extends AbstractKotlinRule {
 //            addViolation(data, new KotlinNodeAdapter(node.getNode()));
 //        }
 //        return data;
-//    }
+/// /    }
+
 }

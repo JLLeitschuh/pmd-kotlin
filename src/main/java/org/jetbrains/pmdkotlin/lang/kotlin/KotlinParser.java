@@ -25,11 +25,8 @@ import org.jetbrains.kotlin.cli.jvm.compiler.EnvironmentConfigFiles;
 import org.jetbrains.kotlin.cli.jvm.compiler.KotlinCoreEnvironment;
 import org.jetbrains.kotlin.config.CompilerConfiguration;
 import org.jetbrains.kotlin.lexer.JetLexer;
-import org.jetbrains.kotlin.lexer.JetTokens;
 import org.jetbrains.kotlin.parsing.JetParser;
 import org.jetbrains.kotlin.parsing.JetParserDefinition;
-import org.jetbrains.kotlin.psi.JetBlockExpression;
-import org.jetbrains.kotlin.psi.JetCatchClause;
 import org.jetbrains.pmdkotlin.lang.kotlin.ast.AbstractKotlinNode;
 import org.jetbrains.pmdkotlin.lang.kotlin.ast.KotlinNodeAdapter;
 

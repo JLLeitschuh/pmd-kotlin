@@ -25,4 +25,20 @@ public class PmdTest {
         int x = PMD.doPMD(config);
         assert (x == 3);
     }
+
+    @Test
+    public void deprecatedTest() {
+        PMDConfiguration config = new PMDConfiguration();
+        config.setRuleSets("/home/user/pmd-kotlin/src/main/resources/ruleset/kotlin/deprecated.xml");
+        config.setReportFormat("html");
+        //config.setInputPaths("/home/user/pmd-kotlin/src/test/resources/org/jetbrains/pmdkotlin/deprecatedTest/TraitKeywordTest.kt");
+        //config.setInputPaths("/home/user/pmd-kotlin/src/test/resources/org/jetbrains/pmdkotlin/deprecatedTest/EnumSuperConstructorTest.kt");
+        //config.setInputPaths("/home/user/pmd-kotlin/src/test/resources/org/jetbrains/pmdkotlin/deprecatedTest/EnumDelimiterTest.kt");
+        //config.setInputPaths("/home/user/pmd-kotlin/src/test/resources/org/jetbrains/pmdkotlin/deprecatedTest/LambdaSyntaxTest.kt");
+        config.setInputPaths("/home/user/pmd-kotlin/src/test/resources/org/jetbrains/pmdkotlin/deprecatedTest/StaticAssertTest.kt");
+        config.setThreads(0);
+        config.setDefaultLanguageVersion(new KotlinLanguageModule().getDefaultVersion());
+        int x = PMD.doPMD(config);
+        assert (x == 1);
+    }
 }
