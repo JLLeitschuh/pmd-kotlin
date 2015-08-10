@@ -38,7 +38,7 @@ public class CpdTest {
   @Test
   public void testParser() throws FileNotFoundException, URISyntaxException {
       KotlinParser parser = new KotlinParser(new ParserOptions());
-      String filepath = "/home/user/pmd-kotlin/src/test/resources/org/jetbrains/pmdkotlin/TraitKeywordTest.kt";
+      String filepath = "/home/user/pmd-kotlin/src/test/resources/org/jetbrains/pmdkotlin/deprecatedTest/TraitKeywordTest.kt";
       parser.parse(filepath, new FileReader(filepath));
   }
 

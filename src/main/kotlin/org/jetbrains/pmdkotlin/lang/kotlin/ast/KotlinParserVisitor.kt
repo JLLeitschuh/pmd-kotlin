@@ -7,7 +7,7 @@ import org.jetbrains.kotlin.psi.*
 public interface KotlinParserVisitor {
     public fun toJetVisitor(): JetVisitor<Any?, Any?> {
         return object: JetVisitor<Any?, Any?>() {
-            public override  fun visitElement(element: PsiElement) {
+            public override fun visitElement(element: PsiElement) {
                 visitElementPMD(element)
             }
 
@@ -433,7 +433,8 @@ public interface KotlinParserVisitor {
 
     public fun visitElementPMD(element: PsiElement) {
 //        System.err.println("VisitElementPMD")
-        element.acceptChildren(toJetVisitor())
+        (element.getCopyableUserData(KotlinASTNodeAdapter.OUTER_NODE_KEY) as KotlinASTNodeAdapter).childrenAccept(this, null);
+        //element.acceptChildren(toJetVisitor())
     }
 
     public fun visitJetElementPMD(element: JetElement, data: Any?): Any? {

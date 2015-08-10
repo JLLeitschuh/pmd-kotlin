@@ -4,6 +4,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.impl.PsiBuilderImpl;
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -13,8 +14,6 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.impl.source.tree.FileElement;
-import com.intellij.psi.impl.source.tree.PsiWhiteSpaceImpl;
-import com.intellij.psi.tree.TokenSet;
 import net.sourceforge.pmd.lang.AbstractParser;
 import net.sourceforge.pmd.lang.ParserOptions;
 import net.sourceforge.pmd.lang.TokenManager;
@@ -28,7 +27,7 @@ import org.jetbrains.kotlin.lexer.JetLexer;
 import org.jetbrains.kotlin.parsing.JetParser;
 import org.jetbrains.kotlin.parsing.JetParserDefinition;
 import org.jetbrains.pmdkotlin.lang.kotlin.ast.AbstractKotlinNode;
-import org.jetbrains.pmdkotlin.lang.kotlin.ast.KotlinNodeAdapter;
+import org.jetbrains.pmdkotlin.lang.kotlin.ast.KotlinASTNodeAdapter;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -39,6 +38,7 @@ public class KotlinParser extends AbstractParser {
     Project project;
     PsiManager manager;
     JetParser parser;
+    PsiFile file;
     JetParserDefinition parserDefinition;
     public KotlinParser(ParserOptions parserOptions) {
         super(parserOptions);
@@ -75,11 +75,15 @@ public class KotlinParser extends AbstractParser {
         }
     }
 
+    public Document getDocument() {
+        return file.getViewProvider().getDocument();
+    }
+
     @Override
     public AbstractKotlinNode parse(String fileName, Reader source) throws ParseException {
         VirtualFile vf = new CoreLocalFileSystem().findFileByPath(fileName);
         FileViewProvider provider = manager.findViewProvider(vf);
-        PsiFile file = parserDefinition.createFile(provider);
+        file = parserDefinition.createFile(provider);
         String s;
         try {
             s = IOUtils.toString(source);
@@ -90,9 +94,8 @@ public class KotlinParser extends AbstractParser {
         PsiBuilder builder = new PsiBuilderImpl(project, file, parserDefinition, new JetLexer(), null, s, null, null);
 
         ASTNode root = parser.parse(JetNodeTypes.JET_FILE, builder, file);
-//        showTree(root, "");
 
-        return new KotlinNodeAdapter(root);
+        return new KotlinASTNodeAdapter(root, this);
     }
 
     @Override

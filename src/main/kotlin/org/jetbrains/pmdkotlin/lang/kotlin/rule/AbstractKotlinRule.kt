@@ -10,7 +10,7 @@ import net.sourceforge.pmd.lang.rule.ImmutableLanguage
 import org.jetbrains.kotlin.psi.JetTreeVisitor
 import org.jetbrains.pmdkotlin.lang.kotlin.KotlinLanguageModule
 import org.jetbrains.pmdkotlin.lang.kotlin.ast.AbstractKotlinNode
-import org.jetbrains.pmdkotlin.lang.kotlin.ast.KotlinNodeAdapter
+import org.jetbrains.pmdkotlin.lang.kotlin.ast.KotlinASTNodeAdapter
 import org.jetbrains.pmdkotlin.lang.kotlin.ast.KotlinParserVisitor
 import org.jetbrains.pmdkotlin.lang.kotlin.ast.KotlinParserVisitorAdapter
 
@@ -26,7 +26,7 @@ public open class AbstractKotlinRule : AbstractRule(), KotlinParserVisitor, Immu
 
     protected fun visitAll(nodes: List<Node>, ctx: RuleContext) {
         for (element in nodes) {
-            val node = element as KotlinNodeAdapter
+            val node = element as KotlinASTNodeAdapter
 
             visit(node, ctx)
         }

@@ -2,11 +2,12 @@ package org.jetbrains.pmdkotlin.lang.kotlin.rule.deprecated;
 
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
+import net.sourceforge.pmd.lang.ast.Node;
 import org.jetbrains.kotlin.lexer.JetTokens;
 import org.jetbrains.kotlin.psi.JetDeclaration;
 import org.jetbrains.kotlin.psi.JetEnumEntry;
 import org.jetbrains.kotlin.psi.psiUtil.PsiUtilPackage;
-import org.jetbrains.pmdkotlin.lang.kotlin.ast.KotlinNodeAdapter;
+import org.jetbrains.pmdkotlin.lang.kotlin.ast.KotlinASTNodeAdapter;
 import org.jetbrains.pmdkotlin.lang.kotlin.rule.AbstractKotlinRule;
 
 public class EnumDelimiter extends AbstractKotlinRule {
@@ -15,7 +16,7 @@ public class EnumDelimiter extends AbstractKotlinRule {
     public Object visitEnumEntryPMD(JetEnumEntry node, Object data) {
         String neededDelimiter = enumEntryExpectedDelimiter(node);
         if (!neededDelimiter.isEmpty()) {
-            addViolation(getSavedData(), new KotlinNodeAdapter(node.getNode()));
+            addViolation(getSavedData(), node.<Node>getCopyableUserData(KotlinASTNodeAdapter.OUTER_NODE_KEY));
         }
 
         return super.visitEnumEntryPMD(node, data);
