@@ -8,6 +8,7 @@ import net.sourceforge.pmd.lang.ast.Node;
 import net.sourceforge.pmd.lang.dfa.DataFlowNode;
 import org.jaxen.JaxenException;
 import org.jetbrains.kotlin.diagnostics.DiagnosticUtils;
+import org.jetbrains.kotlin.psi.JetVisitor;
 import org.jetbrains.pmdkotlin.lang.kotlin.KotlinParser;
 import org.w3c.dom.Document;
 
@@ -77,7 +78,11 @@ public class KotlinASTNodeAdapter implements AbstractKotlinNode {
 
     @Override
     public Object jjtAccept(KotlinParserVisitor visitor, Object data) {
-        innerNode.accept(visitor.toJetVisitor());
+        if (innerNode != null) {
+            innerNode.accept(visitor.toJetVisitor());
+        } else {
+            childrenAccept(visitor, data);
+        }
 
         return data;
     }

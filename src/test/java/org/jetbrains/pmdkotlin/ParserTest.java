@@ -3,6 +3,8 @@ package org.jetbrains.pmdkotlin;
 import net.sourceforge.pmd.lang.ParserOptions;
 import org.jetbrains.kotlin.psi.JetPackageDirective;
 import org.jetbrains.pmdkotlin.lang.kotlin.KotlinParser;
+import org.jetbrains.pmdkotlin.lang.kotlin.ast.AbstractKotlinNode;
+import org.jetbrains.pmdkotlin.lang.kotlin.ast.KotlinASTNodeAdapter;
 import org.jetbrains.pmdkotlin.lang.kotlin.ast.KotlinParserVisitorAdapter;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -27,12 +29,13 @@ public class ParserTest {
         KotlinParserVisitorAdapter adapter = new KotlinParserVisitorAdapter(){
             @Override
             public Object visitPackageDirectivePMD(JetPackageDirective directive, Object data) {
-                Assert.assertEquals(data, "package org.jetbrains.pmdkotlin");
+                Assert.assertEquals(directive.getText(), "package org.jetbrains.pmdkotlin");
                 return super.visitPackageDirectivePMD(directive, data);
             }
         };
 
-        parser.parse(file.getAbsolutePath(), new FileReader(file)).jjtAccept(adapter, null);
+        AbstractKotlinNode root = parser.parse(file.getAbsolutePath(), new FileReader(file));
+        root.jjtAccept(adapter, null);
     }
 
     private File writeTempFile(String content){
