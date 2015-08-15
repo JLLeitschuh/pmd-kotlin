@@ -18,29 +18,42 @@ import java.util.*
 
 import org.mockito.Mockito.mock
 
+// todo: add detailed asserts for matches
 public class CpdTest {
-    private var cpd: CPD? = null
-    private var config: CPDConfiguration? = null
-    private var listener: CPDListener? = null
+
+    var config: CPDConfiguration = CPDConfiguration()
+    var cpd: CPD = CPD(config)
     private var hm: MutableMap<String, String>? = null
 
-    BeforeTest
-    public fun setUp() {
+    BeforeTest fun setUp() {
         config = CPDConfiguration()
-        config?.setLanguage(KotlinLanguage())
-        config?.setEncoding("UTF-8")
-        config?.setMinimumTileSize(10)
-        config?.setIgnoreIdentifiers(true)
-        config?.setIgnoreLiterals(true)
+        with(config) {
+            setLanguage(KotlinLanguage())
+            setEncoding("UTF-8")
+            setMinimumTileSize(10)
+            setIgnoreIdentifiers(true)
+            setIgnoreLiterals(true)
+        }
         cpd = CPD(config)
-        listener = mock<CPDListener>(javaClass<CPDListener>())
-        cpd!!.setCpdListener(listener)
     }
 
-    Test
-    public fun testParser() {
+    Test fun parser() {
         val parser = KotlinParser(ParserOptions())
         val file = getResource("deprecatedTest/TraitKeywordTest.kt")
+
+        parser.parse(file.getAbsolutePath(), FileReader(file))
+    }
+
+    Test fun duplicateFunction() {
+        cpd.add(getResource("DuplicateFunction.kt"))
+
+        cpd.go()
+        show(cpd.getMatches())
+    }
+
+    Test fun ignoreImports() {
+        val parser = KotlinParser(ParserOptions())
+        val file = getResource("ignoreImportsTest/IgnoreImports1.kt")
         parser.parse(file.getAbsolutePath(), FileReader(file))
     }
 
@@ -72,18 +85,17 @@ public class CpdTest {
     //        show(cpd.getMatches());
     //    }
 
-    throws(FileNotFoundException::class)
     public fun show(matches: Iterator<Match>) {
         val pw = PrintWriter("test_results.txt")
-        hm = HashMap<String, String>()
-        for (sc in cpd!!.getSources()) {
-            hm!!.put(sc.getFileName(), sc.getCodeBuffer().toString())
+        var hm = HashMap<String, String>()
+        for (sc in cpd.getSources()) {
+            hm.put(sc.getFileName(), sc.getCodeBuffer().toString())
         }
 
         while (matches.hasNext()) {
             val match = matches.next()
             for (m in match.getMarkSet()) {
-                m.setSoureCodeSlice(hm!!.get(m.getFilename())?.substring(m.getBeginLine(), m.getEndLine() + 1))
+                m.setSoureCodeSlice(hm.get(m.getFilename())?.substring(m.getBeginLine(), m.getEndLine() + 1))
                 pw.println(m.getFilename())
                 pw.println(m.getSourceCodeSlice())
             }

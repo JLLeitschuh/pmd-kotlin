@@ -5,6 +5,7 @@ import net.sourceforge.pmd.PMDConfiguration
 import org.jetbrains.pmdkotlin.lang.kotlin.KotlinLanguageModule
 import org.testng.annotations.BeforeTest
 import org.testng.annotations.Test
+import org.testng.Assert.*
 
 
 public class PmdTest {
@@ -22,8 +23,7 @@ public class PmdTest {
         config.setThreads(0)
         config.setDefaultLanguageVersion(KotlinLanguageModule().getDefaultVersion())
 
-        val x = PMD.doPMD(config)
-        assert((x == 3))
+        assertEquals(3, PMD.doPMD(config))
     }
 
     Test
