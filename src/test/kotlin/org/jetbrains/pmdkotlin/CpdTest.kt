@@ -57,6 +57,14 @@ public class CpdTest {
         parser.parse(file.getAbsolutePath(), FileReader(file))
     }
 
+    Test fun falsePositives(){
+        cpd.add(getResource("cpd/KotlinParserVisitor.kt"))
+        cpd.add(getResource("cpd/KotlinParserVisitorAdapter.kt"))
+
+        cpd.go()
+        show(cpd.getMatches())
+    }
+
     //    @Test
     //    public void testDuplicateFunction() throws IOException {
     //        cpd.add(getKotlinFile("DuplicateFunction.kt"));
