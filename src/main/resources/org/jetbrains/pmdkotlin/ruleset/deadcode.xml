@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+
+<ruleset name="Dead code rules"
+         xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 http://pmd.sourceforge.net/ruleset_2_0_0.xsd">
+    <description>
+
+    </description>
+
+    <rule name="UnreachableCode"
+          language="kotlin"
+          message="Unreachable code on lines {0}-{1}"
+          class="org.jetbrains.pmdkotlin.lang.kotlin.rule.deadcode.UnreachableCodeRule">
+
+        <description>
+            Unreachable code
+        </description>
+
+        <priority>3</priority>
+
+        <example>
+            <![CDATA[
+            ]]>
+        </example>
+    </rule>
+</ruleset>

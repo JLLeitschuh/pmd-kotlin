@@ -7,13 +7,12 @@ import org.jetbrains.pmdkotlin.lang.kotlin.ast.KotlinASTNodeAdapter
 import org.jetbrains.pmdkotlin.lang.kotlin.rule.AbstractKotlinRule;
 
 public class SimplifyNegatedBinaryExpressionRule: AbstractKotlinRule() {
-
-    public override fun visitPrefixExpressionPMD(node: JetPrefixExpression, data: Any?): Any? {
-        if (isApplicable(node)) {
-            addViolation(savedData, node.getCopyableUserData(KotlinASTNodeAdapter.OUTER_NODE_KEY))
+    public override fun visitPrefixExpressionPMD(expression: JetPrefixExpression, data: Any?): Any? {
+        if (isApplicable(expression)) {
+            addViolation(savedData, expression.getCopyableUserData(KotlinASTNodeAdapter.OUTER_NODE_KEY))
         }
 
-        return super.visitPrefixExpressionPMD(node, data)
+        return super.visitPrefixExpressionPMD(expression, data)
     }
 
     private fun isApplicable(node: JetPrefixExpression): Boolean {

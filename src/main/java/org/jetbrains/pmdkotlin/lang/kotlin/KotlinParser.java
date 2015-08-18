@@ -100,44 +100,7 @@ public class KotlinParser extends AbstractParser {
 
         FileElement root = (FileElement) parser.parse(JetNodeTypes.JET_FILE, builder, file);
         root.setPsi(file.getNode().getPsi());
-        return new KotlinASTNodeAdapter((FileElement)root, this);
-
-    /* temporary */
-
-//        PsiBuilder builder = new PsiBuilderImpl(project, file, parserDefinition, new JetLexer(), null, s, null, null);
-//        try {
-//            Method m = JetParsing.class.getDeclaredMethod("createForTopLevel", SemanticWhitespaceAwarePsiBuilder.class);
-//            m.setAccessible(true);
-//            JetParsing jp = (JetParsing) m.invoke(null, new SemanticWhitespaceAwarePsiBuilderImpl(builder));
-//            m = JetParsing.class.getSuperclass().getDeclaredMethod("mark");
-//            m.setAccessible(true);
-//            PsiBuilder.Marker fileMarker = (PsiBuilder.Marker) m.invoke(jp);
-//
-//            m = jp.getClass().getDeclaredMethod("parsePreamble");
-//            m.setAccessible(true);
-//            m.invoke(jp);
-//
-//            Method eof = JetParsing.class.getSuperclass().getDeclaredMethod("eof");
-//            eof.setAccessible(true);
-//
-//            m = jp.getClass().getDeclaredMethod("parseTopLevelDeclaration");
-//            m.setAccessible(true);
-//
-//            while (!(Boolean)eof.invoke(jp)) {
-//                m.invoke(jp);
-//            }
-//            fileMarker.done(new JetFileElementType());
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        ASTNode root = builder.getTreeBuilt();
-//        ASTNode root2 = file.getNode();
-//        root2.getPsi();
-//        builder = new PsiBuilderImpl(project, file, parserDefinition, new JetLexer(), null, s, null, null);
-//        ASTNode root3 = parser.parse(JetNodeTypes.JET_FILE, builder, file);
-//        return new KotlinASTNodeAdapter((FileElement) root, this);
-    /* temporary end */
+        return new KotlinASTNodeAdapter(root.getPsi(), this);
     }
 
     @Override

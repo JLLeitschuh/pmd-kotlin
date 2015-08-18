@@ -34,36 +34,17 @@ public class KotlinASTNodeAdapter implements AbstractKotlinNode {
     private Object userData;
 
     public final static Key<Node> OUTER_NODE_KEY = new Key<Node>("ASTOuterNode");
+    public final static Key<Boolean> UNREACHABLE_KEY = new Key<Boolean>("IsUnreachable");
     public KotlinASTNodeAdapter(int id) {
         this.id = id;
     }
 
-    protected BindingTrace trace;
-    protected Pseudocode pseudocode;
+    public BindingTrace trace;
+    public Pseudocode pseudocode;
 
     public KotlinASTNodeAdapter(int id, KotlinParser parser) {
         this.id = id;
         this.parser = parser;
-    }
-
-//    public KotlinASTNodeAdapter(FileElement innerNode, KotlinParser parser) {
-//        //this.innerNode = null;
-//        this.innerNode = innerNode.getPsi();
-//        this.parser = parser;
-//        this.trace = new BindingTraceContext();
-//        childrenPropagation(innerNode);
-//    }
-
-    public KotlinASTNodeAdapter(ASTNode innerNode, KotlinParser parser, BindingTrace trace) {
-        this(innerNode.getPsi(), parser, trace);
-    }
-
-    public KotlinASTNodeAdapter(ASTNode innerNode, KotlinParser parser) {
-        this(innerNode, parser, null);
-    }
-
-    public KotlinASTNodeAdapter(ASTNode innerNode) {
-        this(innerNode.getPsi(), null, null);
     }
 
     public KotlinASTNodeAdapter(PsiElement innerNode) {
@@ -80,46 +61,25 @@ public class KotlinASTNodeAdapter implements AbstractKotlinNode {
         this.trace = trace;
 
         if (this.trace == null) {
-            trace = new BindingTraceContext();
+            this.trace = new BindingTraceContext();
         }
         this.innerNode.putCopyableUserData(OUTER_NODE_KEY, this);
+        this.innerNode.putCopyableUserData(KotlinASTNodeAdapter.UNREACHABLE_KEY, Boolean.FALSE);
         if (this.innerNode instanceof JetElement) {
             this.pseudocode = new JetControlFlowProcessor(trace).generatePseudocode((JetElement) this.innerNode);
         }
     }
 
-    public KotlinParser getParser() {
-        if (parser == null) {
-            KotlinASTNodeAdapter parent = (KotlinASTNodeAdapter) jjtGetParent();
-            if (parent != null) {
-                parser = parent.getParser();
-            }
-        }
-
-        return parser;
-    }
-
     @Override
     public Object jjtAccept(KotlinParserVisitor visitor, Object data) {
-        if (innerNode != null) {
-            innerNode.accept(visitor.toJetVisitor());
-        } else {
-            childrenAccept(visitor, data);
-        }
-
+        innerNode.accept(visitor.toJetVisitor());
         return data;
     }
 
     @Override
     public Object childrenAccept(KotlinParserVisitor visitor, Object data) {
         childrenPropagation();
-        if (innerNode == null) {
-            for (int i = 0; i < children.length; i++) {
-                children[i].jjtAccept(visitor, data);
-            }
-        } else {
-            innerNode.acceptChildren(visitor.toJetVisitor());
-        }
+        innerNode.acceptChildren(visitor.toJetVisitor());
 
         return data;
     }
@@ -151,28 +111,23 @@ public class KotlinASTNodeAdapter implements AbstractKotlinNode {
     @Override
     public Node jjtGetParent() {
         if (parentNode == null && innerNode != null) {
-            parentNode = new KotlinASTNodeAdapter(innerNode.getParent());
+            parentNode = new KotlinASTNodeAdapter(innerNode.getParent(), parser, trace);
         }
 
         return parentNode;
     }
 
     private void childrenPropagation() {
-        if (innerNode != null) {
-            childrenPropagation(innerNode.getNode());
-        }
-    }
-
-    private void childrenPropagation(ASTNode node) {
         if (children == null) {
-            ASTNode[] innerChildren = node.getChildren(null);
+            ASTNode[] innerChildren = innerNode.getNode().getChildren(null);
             children = new KotlinASTNodeAdapter[innerChildren.length];
             for (int i = 0; i < innerChildren.length; i++) {
-                children[i] = new KotlinASTNodeAdapter(innerChildren[i], parser, trace);
+                children[i] = new KotlinASTNodeAdapter(innerChildren[i].getPsi(), parser, trace);
                 children[i].jjtSetParent(this);
             }
         }
     }
+
 
     //Not effective
     @Override

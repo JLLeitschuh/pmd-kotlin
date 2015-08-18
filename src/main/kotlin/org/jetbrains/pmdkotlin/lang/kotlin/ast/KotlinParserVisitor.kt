@@ -53,7 +53,7 @@ public interface KotlinParserVisitor {
             }
 
             public override fun visitJetFile(file: JetFile, data: Any?): Any? {
-                visitFile(file)
+                visitJetFilePMD(file, data)
                 return data
             }
 
@@ -480,7 +480,7 @@ public interface KotlinParserVisitor {
 
     public fun visitJetFilePMD(file: JetFile, data: Any?): Any? {
         toJetVisitor().visitFile(file)
-        return null
+        return data
     }
 
     public fun visitScriptPMD(script: JetScript, data: Any?): Any? {

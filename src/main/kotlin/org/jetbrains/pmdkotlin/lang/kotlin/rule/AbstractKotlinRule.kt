@@ -33,7 +33,7 @@ public open class AbstractKotlinRule : AbstractRule(), KotlinParserVisitor, Immu
     }
 
     public fun visit(node: Node, data: Any): Any? {
-        (node as AbstractKotlinNode).childrenAccept(this, data)
+        (node as AbstractKotlinNode).jjtAccept(this, data)
         return data
     }
 
