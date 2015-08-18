@@ -12,7 +12,7 @@ public class DeprecatedEnumSuperConstructor extends AbstractKotlinRule {
     @Override
     public Object visitEnumEntryPMD(JetEnumEntry node, Object data) {
         if (enumEntryUsesDeprecatedSuperConstructor(node)) {
-            addViolation(getSavedData(), node.<Node>getCopyableUserData(KotlinASTNodeAdapter.OUTER_NODE_KEY));
+            addViolation(getSavedData(), node.<Node>getCopyableUserData(KotlinASTNodeAdapter.OUTER_NODE_KEY), new Object[]{node.getName()});
         }
 
         return super.visitEnumEntryPMD(node, data);

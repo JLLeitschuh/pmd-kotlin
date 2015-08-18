@@ -14,6 +14,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.impl.source.tree.FileElement;
+import com.intellij.psi.tree.IElementType;
 import net.sourceforge.pmd.lang.AbstractParser;
 import net.sourceforge.pmd.lang.ParserOptions;
 import net.sourceforge.pmd.lang.TokenManager;
@@ -24,15 +25,19 @@ import org.jetbrains.kotlin.cli.jvm.compiler.EnvironmentConfigFiles;
 import org.jetbrains.kotlin.cli.jvm.compiler.KotlinCoreEnvironment;
 import org.jetbrains.kotlin.config.CompilerConfiguration;
 import org.jetbrains.kotlin.lexer.JetLexer;
-import org.jetbrains.kotlin.parsing.JetParser;
-import org.jetbrains.kotlin.parsing.JetParserDefinition;
+import org.jetbrains.kotlin.parsing.*;
+import org.jetbrains.kotlin.psi.stubs.elements.JetFileElementType;
 import org.jetbrains.pmdkotlin.lang.kotlin.ast.AbstractKotlinNode;
 import org.jetbrains.pmdkotlin.lang.kotlin.ast.KotlinASTNodeAdapter;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
+
+import static org.jetbrains.kotlin.JetNodeTypes.JET_FILE;
 
 public class KotlinParser extends AbstractParser {
     Project project;
@@ -93,9 +98,46 @@ public class KotlinParser extends AbstractParser {
 
         PsiBuilder builder = new PsiBuilderImpl(project, file, parserDefinition, new JetLexer(), null, s, null, null);
 
-        ASTNode root = parser.parse(JetNodeTypes.JET_FILE, builder, file);
+        FileElement root = (FileElement) parser.parse(JetNodeTypes.JET_FILE, builder, file);
+        root.setPsi(file.getNode().getPsi());
+        return new KotlinASTNodeAdapter((FileElement)root, this);
 
-        return new KotlinASTNodeAdapter(root, this);
+    /* temporary */
+
+//        PsiBuilder builder = new PsiBuilderImpl(project, file, parserDefinition, new JetLexer(), null, s, null, null);
+//        try {
+//            Method m = JetParsing.class.getDeclaredMethod("createForTopLevel", SemanticWhitespaceAwarePsiBuilder.class);
+//            m.setAccessible(true);
+//            JetParsing jp = (JetParsing) m.invoke(null, new SemanticWhitespaceAwarePsiBuilderImpl(builder));
+//            m = JetParsing.class.getSuperclass().getDeclaredMethod("mark");
+//            m.setAccessible(true);
+//            PsiBuilder.Marker fileMarker = (PsiBuilder.Marker) m.invoke(jp);
+//
+//            m = jp.getClass().getDeclaredMethod("parsePreamble");
+//            m.setAccessible(true);
+//            m.invoke(jp);
+//
+//            Method eof = JetParsing.class.getSuperclass().getDeclaredMethod("eof");
+//            eof.setAccessible(true);
+//
+//            m = jp.getClass().getDeclaredMethod("parseTopLevelDeclaration");
+//            m.setAccessible(true);
+//
+//            while (!(Boolean)eof.invoke(jp)) {
+//                m.invoke(jp);
+//            }
+//            fileMarker.done(new JetFileElementType());
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        ASTNode root = builder.getTreeBuilt();
+//        ASTNode root2 = file.getNode();
+//        root2.getPsi();
+//        builder = new PsiBuilderImpl(project, file, parserDefinition, new JetLexer(), null, s, null, null);
+//        ASTNode root3 = parser.parse(JetNodeTypes.JET_FILE, builder, file);
+//        return new KotlinASTNodeAdapter((FileElement) root, this);
+    /* temporary end */
     }
 
     @Override

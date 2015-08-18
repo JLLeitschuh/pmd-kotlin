@@ -16,7 +16,7 @@ public class EnumDelimiter extends AbstractKotlinRule {
     public Object visitEnumEntryPMD(JetEnumEntry node, Object data) {
         String neededDelimiter = enumEntryExpectedDelimiter(node);
         if (!neededDelimiter.isEmpty()) {
-            addViolation(getSavedData(), node.<Node>getCopyableUserData(KotlinASTNodeAdapter.OUTER_NODE_KEY));
+            addViolation(getSavedData(), node.<Node>getCopyableUserData(KotlinASTNodeAdapter.OUTER_NODE_KEY), new Object[]{node.getName(), neededDelimiter});
         }
 
         return super.visitEnumEntryPMD(node, data);

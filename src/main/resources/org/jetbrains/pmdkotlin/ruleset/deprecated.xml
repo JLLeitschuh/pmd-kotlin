@@ -27,7 +27,7 @@
 
     <rule name="DeprecatedSuperConstructorInEnum"
           language="kotlin"
-          message="Enum entry uses deprecated super constructor syntax, use ENTRY(arguments) instead"
+          message="Enum entry {0} uses deprecated super constructor syntax, use ENTRY(arguments) instead"
           class="org.jetbrains.pmdkotlin.lang.kotlin.rule.deprecated.DeprecatedEnumSuperConstructor">
 
         <description>
@@ -44,7 +44,7 @@
 
     <rule name="EnumEntryUsesDeprecatedOrNoDelimiter"
           language="kotlin"
-          message="Enum entry should have a correct delimiter after it"
+          message="Enum entry {0} should have a correct delimiter ''{1}'' after it"
           class="org.jetbrains.pmdkotlin.lang.kotlin.rule.deprecated.EnumDelimiter">
 
         <description>
