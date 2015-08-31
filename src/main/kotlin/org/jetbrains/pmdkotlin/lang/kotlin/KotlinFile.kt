@@ -9,7 +9,7 @@ import org.jetbrains.kotlin.config.CompilerConfiguration
 import org.jetbrains.kotlin.parsing.JetParser
 import org.jetbrains.kotlin.parsing.JetParserDefinition
 //
-//class KotlinFile {
+//class KotlinFileContext {
 //    init {
 //        val configuration = CompilerConfiguration()
 //        val rootDisposable = Disposer.newDisposable()

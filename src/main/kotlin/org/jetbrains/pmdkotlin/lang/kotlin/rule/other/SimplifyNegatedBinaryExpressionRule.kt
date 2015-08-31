@@ -3,6 +3,7 @@ package org.jetbrains.pmdkotlin.lang.kotlin.rule.other;
 import org.jetbrains.kotlin.lexer.JetSingleValueToken;
 import org.jetbrains.kotlin.lexer.JetTokens
 import org.jetbrains.kotlin.psi.*
+import org.jetbrains.kotlin.types.expressions.SenselessComparisonChecker
 import org.jetbrains.pmdkotlin.lang.kotlin.ast.KotlinASTNodeAdapter
 import org.jetbrains.pmdkotlin.lang.kotlin.rule.AbstractKotlinRule;
 

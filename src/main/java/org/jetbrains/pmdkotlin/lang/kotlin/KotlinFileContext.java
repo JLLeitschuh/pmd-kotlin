@@ -20,8 +20,8 @@ import org.jetbrains.kotlin.parsing.JetParserDefinition;
 import java.io.IOException;
 import java.io.Reader;
 
-public class KotlinFile {
-    public KotlinFile(String fileName, Reader source) {
+public class KotlinFileContext {
+    public KotlinFileContext(String fileName, Reader source) {
         this.filename = fileName;
         virtualFile = new CoreLocalFileSystem().findFileByPath(fileName);
         provider = manager.findViewProvider(virtualFile);

@@ -2,35 +2,21 @@ package org.jetbrains.pmdkotlin.lang.kotlin.ast;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.Key;
-import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.impl.source.tree.FileElement;
 import net.sourceforge.pmd.lang.ast.Node;
 import net.sourceforge.pmd.lang.dfa.DataFlowNode;
 import org.jaxen.JaxenException;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.kotlin.cfg.*;
-import org.jetbrains.kotlin.cfg.pseudocode.Pseudocode;
-import org.jetbrains.kotlin.diagnostics.Diagnostic;
-import org.jetbrains.kotlin.diagnostics.DiagnosticFactory;
-import org.jetbrains.kotlin.diagnostics.DiagnosticUtils;
-import org.jetbrains.kotlin.diagnostics.Errors;
-import org.jetbrains.kotlin.psi.JetElement;
-import org.jetbrains.kotlin.resolve.BindingTrace;
-import org.jetbrains.kotlin.resolve.BindingTraceContext;
-import org.jetbrains.pmdkotlin.lang.kotlin.KotlinFile;
+import org.jetbrains.pmdkotlin.lang.kotlin.KotlinFileContext;
 import org.jetbrains.pmdkotlin.lang.kotlin.KotlinParser;
 import org.w3c.dom.Document;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.jetbrains.kotlin.diagnostics.Errors.UNREACHABLE_CODE;
-
 public class KotlinASTNodeAdapter implements AbstractKotlinNode {
     protected int id;
-    // protected KotlinParser parser;
-    @NotNull protected KotlinFile kotlinFile;
+    @NotNull protected KotlinFileContext kotlinFileContext;
 
     protected PsiElement innerNode;
     protected KotlinASTNodeAdapter parentNode;
@@ -43,50 +29,21 @@ public class KotlinASTNodeAdapter implements AbstractKotlinNode {
     private Object userData;
 
     public final static Key<Node> OUTER_NODE_KEY = new Key<Node>("ASTOuterNode");
-    public final static Key<Boolean> UNREACHABLE_KEY = new Key<Boolean>("IsUnreachable");
     public KotlinASTNodeAdapter(int id) {
         this.id = id;
     }
 
-    public BindingTrace trace;
-    public Pseudocode pseudocode;
-    //public PseudocodeVariablesData variablesData;
-
     public KotlinASTNodeAdapter(int id, KotlinParser parser) {
         this.id = id;
-        //this.kotlinFile = kotlinFile;
     }
 
-    public KotlinASTNodeAdapter(PsiElement innerNode, KotlinFile kotlinFile) {
-        this(innerNode, kotlinFile, null);
-    }
-
-    public KotlinASTNodeAdapter(PsiElement innerNode, KotlinFile kotlinFile, BindingTrace trace) {
-        this.kotlinFile = kotlinFile;
+    public KotlinASTNodeAdapter(PsiElement innerNode, KotlinFileContext kotlinFileContext) {
+        this.kotlinFileContext = kotlinFileContext;
         this.innerNode = innerNode;
-        this.trace = trace;
-
-        if (this.trace == null) {
-            this.trace = new BindingTraceContext();
-        }
-
-        if (this.innerNode instanceof JetElement) {
-            this.pseudocode = new JetControlFlowProcessor(trace).generatePseudocode((JetElement) this.innerNode);
-            //this.flowInfoProvider = new JetFlowInformationProvider((JetElement) innerNode, this.trace);
-        }
-
         this.innerNode.putCopyableUserData(OUTER_NODE_KEY, this);
-        this.innerNode.putCopyableUserData(KotlinASTNodeAdapter.UNREACHABLE_KEY, Boolean.FALSE);
     }
 
-//    public PseudocodeVariablesData getPseudocodeVariablesData() {
-//        if (variablesData == null && pseudocode != null) {
-//            variablesData = new PseudocodeVariablesData(pseudocode, trace.getBindingContext());
-//        }
-//        return variablesData;
-//    }
-
-        @Override
+    @Override
     public Object jjtAccept(KotlinParserVisitor visitor, Object data) {
         innerNode.accept(visitor.toJetVisitor());
         return data;
@@ -127,11 +84,7 @@ public class KotlinASTNodeAdapter implements AbstractKotlinNode {
     @Override
     @NotNull
     public Node jjtGetParent() {
-//        if (parentNode == null && innerNode != null) {
-//            parentNode = new KotlinASTNodeAdapter(innerNode.getParent(), kotlinFile, trace);
-//        }
-
-        return parentNode;
+       return parentNode;
     }
 
     private void childrenPropagation() {
@@ -139,7 +92,7 @@ public class KotlinASTNodeAdapter implements AbstractKotlinNode {
             ASTNode[] innerChildren = innerNode.getNode().getChildren(null);
             children = new KotlinASTNodeAdapter[innerChildren.length];
             for (int i = 0; i < innerChildren.length; i++) {
-                children[i] = new KotlinASTNodeAdapter(innerChildren[i].getPsi(), kotlinFile, trace);
+                children[i] = new KotlinASTNodeAdapter(innerChildren[i].getPsi(), kotlinFileContext);
                 children[i].jjtSetParent(this);
             }
         }
@@ -215,22 +168,22 @@ public class KotlinASTNodeAdapter implements AbstractKotlinNode {
 
     @Override
     public int getBeginLine() {
-        return kotlinFile.getBeginLine(innerNode.getTextRange());
+        return kotlinFileContext.getBeginLine(innerNode.getTextRange());
     }
 
     @Override
     public int getBeginColumn() {
-        return kotlinFile.getBeginColumn(innerNode.getTextRange());
+        return kotlinFileContext.getBeginColumn(innerNode.getTextRange());
     }
 
     @Override
     public int getEndLine() {
-        return kotlinFile.getEndLine(innerNode.getTextRange());
+        return kotlinFileContext.getEndLine(innerNode.getTextRange());
     }
 
     @Override
     public int getEndColumn() {
-        return kotlinFile.getEndColumn(innerNode.getTextRange());
+        return kotlinFileContext.getEndColumn(innerNode.getTextRange());
     }
 
     @Override

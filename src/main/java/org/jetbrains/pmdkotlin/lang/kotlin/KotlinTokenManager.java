@@ -12,7 +12,7 @@ import org.jetbrains.pmdkotlin.cpd.KotlinToken;
 
 public class KotlinTokenManager extends JetLexer implements TokenManager, JetTokens {
     private static ThreadLocal<String> fileName = new ThreadLocal();
-    public KotlinFile kotlinFile;
+    public KotlinFileContext kotlinFileContext;
     public KotlinTokenManager() {
         super();
     }
@@ -27,9 +27,9 @@ public class KotlinTokenManager extends JetLexer implements TokenManager, JetTok
 //        }
 //    }
 
-    public KotlinTokenManager(KotlinFile kotlinFile) {
-        this.kotlinFile = kotlinFile;
-        String src = this.kotlinFile.sourceCodeToString();
+    public KotlinTokenManager(KotlinFileContext kotlinFileContext) {
+        this.kotlinFileContext = kotlinFileContext;
+        String src = this.kotlinFileContext.sourceCodeToString();
         start(src, 0, src.length(), 0);
     }
 
@@ -39,7 +39,7 @@ public class KotlinTokenManager extends JetLexer implements TokenManager, JetTok
             String image = getBufferSequence().subSequence(getTokenStart(), getTokenEnd()).toString();
             TextRange range = new TextRange(getTokenStart(), getTokenEnd());
 
-            return new KotlinToken(image, kotlinFile.filename, getTokenStart(), kotlinFile.getBeginLine(range), tokenType);
+            return new KotlinToken(image, kotlinFileContext.filename, getTokenStart(), kotlinFileContext.getBeginLine(range), tokenType);
         }
         return null;
     }
@@ -59,7 +59,7 @@ public class KotlinTokenManager extends JetLexer implements TokenManager, JetTok
     }
 
     public PsiElement findElementAt(int offset) {
-        return kotlinFile.psiFile.findElementAt(offset);
+        return kotlinFileContext.psiFile.findElementAt(offset);
     }
 
     public boolean isTypeToken(KotlinToken token) {

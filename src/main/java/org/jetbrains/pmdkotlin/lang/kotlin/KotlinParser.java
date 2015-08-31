@@ -5,7 +5,6 @@ import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.impl.PsiBuilderImpl;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.impl.source.tree.FileElement;
-import net.sourceforge.pmd.lang.AbstractParser;
 import net.sourceforge.pmd.lang.Parser;
 import net.sourceforge.pmd.lang.ParserOptions;
 import net.sourceforge.pmd.lang.TokenManager;
@@ -25,7 +24,7 @@ public class KotlinParser implements Parser {
 
     public KotlinParser(ParserOptions parserOptions) {
         this.parserOptions = parserOptions;
-        parser = (JetParser) KotlinFile.parserDefinition.createParser(KotlinFile.project);
+        parser = (JetParser) KotlinFileContext.parserDefinition.createParser(KotlinFileContext.project);
     }
 
 //    @Override
@@ -41,7 +40,7 @@ public class KotlinParser implements Parser {
 
     @Override
     public TokenManager getTokenManager(String s, Reader reader) {
-        return new KotlinTokenManager(new KotlinFile(s, reader));
+        return new KotlinTokenManager(new KotlinFileContext(s, reader));
     }
 
     @Override
@@ -63,7 +62,7 @@ public class KotlinParser implements Parser {
 
     @Override
     public AbstractKotlinNode parse(String fileName, Reader source) throws ParseException {
-        KotlinFile file = new KotlinFile(fileName, source);
+        KotlinFileContext file = new KotlinFileContext(fileName, source);
         try {
             PsiBuilder builder = new PsiBuilderImpl(file.project, file.psiFile, file.parserDefinition, new KotlinTokenManager(), null, file.sourceCodeToString(), null, null);
             FileElement root = (FileElement) parser.parse(JetNodeTypes.JET_FILE, builder, file.psiFile);
