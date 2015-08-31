@@ -1,10 +1,8 @@
 package org.jetbrains.pmdkotlin
 
-import net.sourceforge.pmd.cpd.CPD
-import net.sourceforge.pmd.cpd.CPDConfiguration
-import net.sourceforge.pmd.cpd.CPDListener
-import net.sourceforge.pmd.cpd.Match
+import net.sourceforge.pmd.cpd.*
 import net.sourceforge.pmd.lang.ParserOptions
+import org.jetbrains.kotlin.codegen.FrameMap
 import org.jetbrains.pmdkotlin.cpd.KotlinLanguage
 import org.jetbrains.pmdkotlin.lang.kotlin.KotlinParser
 import org.testng.annotations.BeforeTest
@@ -30,37 +28,36 @@ public class CpdTest {
         with(config) {
             setLanguage(KotlinLanguage())
             setEncoding("UTF-8")
-            setMinimumTileSize(10)
+            setMinimumTileSize(30)
             setIgnoreIdentifiers(true)
             setIgnoreLiterals(true)
         }
         cpd = CPD(config)
     }
 
-    Test fun parser() {
-        val parser = KotlinParser(ParserOptions())
-        val file = getResource("deprecatedTest/TraitKeywordTest.kt")
+//    Test fun parser() {
+//        val parser = KotlinParser(ParserOptions())
+//        //val file = getResource("deprecatedTest/TraitKeywordTest.kt")
+//        val file = getResource("trashTest.kt")
+//
+//        parser.parse(file.getAbsolutePath(), FileReader(file))
+//    }
 
-        parser.parse(file.getAbsolutePath(), FileReader(file))
-    }
-
-    Test fun duplicateFunction() {
-        cpd.add(getResource("DuplicateFunction.kt"))
-
-        cpd.go()
-        show(cpd.getMatches())
-    }
-
-    Test fun ignoreImports() {
-        val parser = KotlinParser(ParserOptions())
-        val file = getResource("ignoreImportsTest/IgnoreImports1.kt")
-        parser.parse(file.getAbsolutePath(), FileReader(file))
-    }
-
+//    Test fun duplicateFunction() {
+//        //cpd.add(getResource("DuplicateFunction.kt"))
+//        cpd.add(getResource())
+//        cpd.go()
+//        show(cpd.getMatches())
+//    }
+//
+//    Test fun ignoreImports() {
+//        val parser = KotlinParser(ParserOptions())
+//        val file = getResource("ignoreImportsTest/IgnoreImports1.kt")
+//        parser.parse(file.getAbsolutePath(), FileReader(file))
+//    }
+//
     Test fun falsePositives(){
         cpd.add(getResource("cpd/KotlinParserVisitor.kt"))
-        cpd.add(getResource("cpd/KotlinParserVisitorAdapter.kt"))
-
         cpd.go()
         show(cpd.getMatches())
     }
@@ -94,24 +91,18 @@ public class CpdTest {
     //    }
 
     public fun show(matches: Iterator<Match>) {
-        val pw = PrintWriter("test_results.txt")
-        var hm = HashMap<String, String>()
-        for (sc in cpd.getSources()) {
-            hm.put(sc.getFileName(), sc.getCodeBuffer().toString())
-        }
-
+        val pw = PrintWriter("cpd_results.txt")
         while (matches.hasNext()) {
             val match = matches.next()
+            pw.println(match.toString())
+
             for (m in match.getMarkSet()) {
-                m.setSoureCodeSlice(hm.get(m.getFilename())?.substring(m.getBeginLine(), m.getEndLine() + 1))
-                pw.println(m.getFilename())
-                pw.println(m.getSourceCodeSlice())
+                pw.println(m.getBeginLine())
+                pw.println(m.getEndLine());
             }
-            pw.println()
-            pw.println()
+            pw.println(match.getSourceCodeSlice())
         }
         pw.close()
-
     }
 }
 

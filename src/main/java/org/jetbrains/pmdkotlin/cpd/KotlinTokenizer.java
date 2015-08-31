@@ -1,6 +1,8 @@
 package org.jetbrains.pmdkotlin.cpd;
 
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
+import com.intellij.util.text.CharSequenceReader;
 import net.sourceforge.pmd.cpd.SourceCode;
 import net.sourceforge.pmd.cpd.TokenEntry;
 import net.sourceforge.pmd.cpd.Tokenizer;
@@ -9,84 +11,58 @@ import net.sourceforge.pmd.lang.LanguageRegistry;
 import net.sourceforge.pmd.lang.LanguageVersionHandler;
 import org.jetbrains.kotlin.lexer.JetTokens;
 import org.jetbrains.pmdkotlin.lang.kotlin.KotlinLanguageModule;
+import org.jetbrains.pmdkotlin.lang.kotlin.KotlinParser;
 import org.jetbrains.pmdkotlin.lang.kotlin.KotlinTokenManager;
 
-import java.io.StringReader;
 import java.util.Properties;
 
 
 public class KotlinTokenizer implements Tokenizer {
-    private boolean ignoreLiterals;
-    private boolean ignoreIdentifiers;
-
-
-    private static final String intType = "Int";
-    private static final String longType = "Long";
-    private static final String doubleType = "Double";
-    private static final String floatType = "Float";
-    private static final String shortType = "Short";
-    private static final String byteType = "Byte";
-    private static final String boolType = "Boolean";
-    private static final String charType = "Char";
-    private static final String stringType = "String";
-    private static final String arrayType = "Array";
-
     public void setProperties(Properties properties) {
         ignoreLiterals = Boolean.parseBoolean(properties.getProperty(IGNORE_LITERALS, "true"));
         ignoreIdentifiers = Boolean.parseBoolean(properties.getProperty(IGNORE_IDENTIFIERS, "true"));
     }
 
     public void tokenize(SourceCode sourceCode, Tokens tokenEntries) {
-        String src = sourceCode.getCodeBuffer().toString();
-
         LanguageVersionHandler languageVersionHandler = LanguageRegistry.getLanguage(KotlinLanguageModule.NAME).getDefaultVersion().getLanguageVersionHandler();
-        String fileName = sourceCode.getFileName();
-        KotlinTokenManager tokenMgr = (KotlinTokenManager) languageVersionHandler.getParser(languageVersionHandler.getDefaultParserOptions()).getTokenManager(
-                fileName, new StringReader(src));
+
+        KotlinParser parser = (KotlinParser) languageVersionHandler.getParser(languageVersionHandler.getDefaultParserOptions());
+
+         tokenManager = (KotlinTokenManager) parser.getTokenManager(
+                sourceCode.getFileName(), new CharSequenceReader(sourceCode.getCodeBuffer()));
 
         TokenDiscarder discarder = new TokenDiscarder();
-        IElementType currentToken = (IElementType) tokenMgr.getCurrentToken();
+        KotlinToken currentToken = (KotlinToken) tokenManager.getCurrentToken();
 
         while (currentToken != null) {
-            if (currentToken.equals(JetTokens.IDENTIFIER) && src.substring(tokenMgr.getTokenStart(), tokenMgr.getTokenEnd()).equals("import")) {
-                currentToken = JetTokens.IMPORT_KEYWORD;
+            if (currentToken.tokenType.equals(JetTokens.IDENTIFIER) && currentToken.image.equals("import")) {
+                currentToken.tokenType = JetTokens.IMPORT_KEYWORD;
             }
 
-            //discarder.updateState(currentToken);
+            discarder.updateState(currentToken);
             if (!discarder.isDiscarding()) {
-                processToken(tokenEntries, src, fileName, currentToken, tokenMgr.getTokenStart(), tokenMgr.getTokenEnd());
+                processToken(tokenEntries, currentToken);
             }
-            currentToken = (IElementType) tokenMgr.getNextToken();
+            currentToken = (KotlinToken) tokenManager.getNextToken();
         }
         tokenEntries.add(TokenEntry.getEOF());
     }
 
-    private void processToken(Tokens tokenEntries, String src, String fileName, IElementType currentToken, int tokenStart, int tokenEnd) {
-        String image = new String(src.substring(tokenStart, tokenEnd));
+    private void processToken(Tokens tokenEntries, KotlinToken currentToken) {
+        String image = currentToken.image;
+        IElementType currentTokenType = currentToken.tokenType;
 
-        boolean isBasicType = image.equals(intType)
-                || image.equals(longType)
-                || image.equals(doubleType)
-                || image.equals(floatType)
-                || image.equals(shortType)
-                || image.equals(byteType)
-                || image.equals(boolType)
-                || image.equals(charType)
-                || image.equals(stringType)
-                || image.equals(arrayType);
+        boolean isLiteral = (currentTokenType.equals(JetTokens.BLOCK_COMMENT)
+                || currentTokenType.equals(JetTokens.CHARACTER_LITERAL)
+                || currentTokenType.equals(JetTokens.INTEGER_LITERAL)
+                || currentTokenType.equals(JetTokens.FLOAT_LITERAL));
 
-
-        boolean isLiteral = (currentToken.equals(JetTokens.BLOCK_COMMENT)
-                || currentToken.equals(JetTokens.CHARACTER_LITERAL)
-                || currentToken.equals(JetTokens.INTEGER_LITERAL)
-                || currentToken.equals(JetTokens.FLOAT_LITERAL));
-
-        if ((currentToken.equals(JetTokens.IDENTIFIER) && (ignoreLiterals && !isBasicType))
+        if ((currentTokenType.equals(JetTokens.IDENTIFIER) && (ignoreIdentifiers && !tokenManager.isTypeToken(currentToken)))
                 || (isLiteral && ignoreLiterals)) {
-            image = currentToken.toString();
+            tokenEntries.add(new TokenEntry(currentToken.tokenType.toString(), currentToken.filename, currentToken.beginLine));
+        } else {
+            tokenEntries.add(new TokenEntry(currentToken.image, currentToken.filename, currentToken.beginLine));
         }
-
-        tokenEntries.add(new TokenEntry(image, fileName, tokenStart));
     }
 
     public void setIgnoreLiterals(boolean ignore) {
@@ -108,39 +84,40 @@ public class KotlinTokenizer implements Tokenizer {
             expectedDot = false;
         }
 
-        public void updateState(IElementType currentToken) {
+        public void updateState(KotlinToken currentToken) {
             skipSemicolon(currentToken);
             skipWhiteSpaces(currentToken);
             skipComments(currentToken);
             skipPackagesAndImports(currentToken);
         }
 
-        private void skipSemicolon(IElementType currentToken) {
-            discardingSemicolon = currentToken.equals(JetTokens.SEMICOLON);
+        private void skipSemicolon(KotlinToken currentToken) {
+            discardingSemicolon = currentToken.tokenType.equals(JetTokens.SEMICOLON);
         }
 
-        private void skipWhiteSpaces(IElementType currentToken) {
-            discardingWhiteSpaces = currentToken.equals(JetTokens.WHITE_SPACE);
+        private void skipWhiteSpaces(KotlinToken currentToken) {
+            discardingWhiteSpaces = currentToken.tokenType.equals(JetTokens.WHITE_SPACE);
         }
 
-        private void skipComments(IElementType currentToken) {
-            discardingComments = currentToken.equals(JetTokens.BLOCK_COMMENT) || currentToken.equals(JetTokens.EOL_COMMENT);
+        private void skipComments(KotlinToken currentToken) {
+            discardingComments = currentToken.tokenType.equals(JetTokens.BLOCK_COMMENT) || currentToken.equals(JetTokens.EOL_COMMENT);
         }
 
-        private void skipPackagesAndImports(IElementType currentToken) {
-            if (currentToken.equals(JetTokens.PACKAGE_KEYWORD)
-                    || currentToken.equals(JetTokens.IMPORT_KEYWORD)
-                    || currentToken.equals(JetTokens.AS_KEYWORD)) {
+        private void skipPackagesAndImports(KotlinToken currentToken) {
+            IElementType currentTokenType = currentToken.tokenType;
+            if (currentTokenType.equals(JetTokens.PACKAGE_KEYWORD)
+                    || currentTokenType.equals(JetTokens.IMPORT_KEYWORD)
+                    || currentTokenType.equals(JetTokens.AS_KEYWORD)) {
                 discardingKeywords = true;
                 expectedIdentifier = true;
                 expectedDot = false;
-            } else if (discardingKeywords && expectedIdentifier && currentToken.equals(JetTokens.IDENTIFIER)) {
+            } else if (discardingKeywords && expectedIdentifier && currentTokenType.equals(JetTokens.IDENTIFIER)) {
                 expectedIdentifier = false;
                 expectedDot = true;
-            } else if (discardingKeywords && expectedIdentifier && currentToken.equals(JetTokens.MUL)) {
+            } else if (discardingKeywords && expectedIdentifier && currentTokenType.equals(JetTokens.MUL)) {
                 discardingKeywords = false;
             } else if (discardingKeywords && expectedDot) {
-                if (currentToken.equals(JetTokens.DOT)) {
+                if (currentTokenType.equals(JetTokens.DOT)) {
                     expectedIdentifier = true;
                     expectedDot = false;
                 } else {
@@ -161,4 +138,9 @@ public class KotlinTokenizer implements Tokenizer {
         private boolean discardingKeywords;
         private boolean expectedIdentifier, expectedDot;
     }
+
+    private KotlinTokenManager tokenManager;
+
+    private boolean ignoreLiterals;
+    private boolean ignoreIdentifiers;
 }

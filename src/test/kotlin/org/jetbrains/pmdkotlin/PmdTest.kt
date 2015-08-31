@@ -14,32 +14,48 @@ public class PmdTest {
     public fun setUp() {
     }
 
-    Test
-    public fun emptyTest() {
-        val config = PMDConfiguration()
-        config.setRuleSets(getResourcePath("ruleset/empty.xml"))
-        config.setReportFormat("html")
-        config.setInputPaths(getResourcePath("emptyCodeTests/emptyTryCatchBlock.kt"))
-        config.setThreads(0)
-        config.setDefaultLanguageVersion(KotlinLanguageModule().getDefaultVersion())
+//    Test
+//    public fun emptyTest() {
+//        val config = PMDConfiguration()
+//        config.setRuleSets(getResourcePath("ruleset/empty.xml"))
+//        config.setReportFormat("html")
+//        config.setInputPaths(getResourcePath("emptyCodeTests/emptyTryCatchBlock.kt"))
+//        config.setThreads(0)
+//        config.setDefaultLanguageVersion(KotlinLanguageModule().getDefaultVersion())
+//
+//        assertEquals(3, PMD.doPMD(config))
+//    }
+//
+//    Test
+//    public fun deprecatedTest() {
+//        val config = PMDConfiguration()
+//        config.setRuleSets(getResourcePath("ruleset/deprecated.xml"))
+//        config.setReportFormat("html")
+//        //config.setInputPaths("/home/user/pmd-kotlin/src/test/resources/org/jetbrains/pmdkotlin/deprecatedTest/TraitKeywordTest.kt");
+//        //config.setInputPaths(getResourcePath("deprecatedTest/EnumSuperConstructorTest.kt"))
+//        //config.setInputPaths("/home/user/pmd-kotlin/src/test/resources/org/jetbrains/pmdkotlin/deprecatedTest/EnumDelimiterTest.kt");
+//        //config.setInputPaths("/home/user/pmd-kotlin/src/test/resources/org/jetbrains/pmdkotlin/deprecatedTest/LambdaSyntaxTest.kt");
+//        //config.setInputPaths("/home/user/pmd-kotlin/src/test/resources/org/jetbrains/pmdkotlin/deprecatedTest/StaticAssertTest.kt");
+//        config.setThreads(0)
+//        config.setReportFile("atata.html")
+//        config.setDefaultLanguageVersion(KotlinLanguageModule().getDefaultVersion())
+//        val x = PMD.doPMD(config)
+//        //        assert (x == 1);
+//    }
 
-        assertEquals(3, PMD.doPMD(config))
-    }
-
     Test
-    public fun deprecatedTest() {
+    public fun otherTest() {
         val config = PMDConfiguration()
-        config.setRuleSets(getResourcePath("ruleset/deprecated.xml"))
+        config.setRuleSets(getResourcePath("ruleset/deadcode.xml"))
         config.setReportFormat("html")
-        //config.setInputPaths("/home/user/pmd-kotlin/src/test/resources/org/jetbrains/pmdkotlin/deprecatedTest/TraitKeywordTest.kt");
-        config.setInputPaths(getResourcePath("deprecatedTest/EnumSuperConstructorTest.kt"))
-        //config.setInputPaths("/home/user/pmd-kotlin/src/test/resources/org/jetbrains/pmdkotlin/deprecatedTest/EnumDelimiterTest.kt");
-        //config.setInputPaths("/home/user/pmd-kotlin/src/test/resources/org/jetbrains/pmdkotlin/deprecatedTest/LambdaSyntaxTest.kt");
-        //config.setInputPaths("/home/user/pmd-kotlin/src/test/resources/org/jetbrains/pmdkotlin/deprecatedTest/StaticAssertTest.kt");
+        //config.setInputPaths("/home/user/pmd-kotlin/src/test/resources/org/jetbrains/pmdkotlin/deadCodeTests/UnusedFunctionTest.kt");
+        config.setInputPaths("/home/user/pmd-kotlin/src/test/resources/org/jetbrains/pmdkotlin/deadCodeTests/UnusedVariableTest.kt");
+        //config.setInputPaths("/home/user/pmd-kotlin/src/test/resources/org/jetbrains/pmdkotlin/trashTest.kt");
+        //config.setInputPaths("/home/user/pmd-kotlin/src/test/resources/org/jetbrains/pmdkotlin/deadCodeTests/UnreachableCodeTest.kt");
         config.setThreads(0)
         config.setReportFile("atata.html")
         config.setDefaultLanguageVersion(KotlinLanguageModule().getDefaultVersion())
         val x = PMD.doPMD(config)
-        //        assert (x == 1);
+                //        assert (x == 1);
     }
 }

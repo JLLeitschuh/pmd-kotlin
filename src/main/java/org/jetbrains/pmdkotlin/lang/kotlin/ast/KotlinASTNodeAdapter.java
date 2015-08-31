@@ -2,26 +2,35 @@ package org.jetbrains.pmdkotlin.lang.kotlin.ast;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.Key;
+import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.impl.source.tree.FileElement;
 import net.sourceforge.pmd.lang.ast.Node;
 import net.sourceforge.pmd.lang.dfa.DataFlowNode;
 import org.jaxen.JaxenException;
-import org.jetbrains.kotlin.cfg.JetControlFlowProcessor;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.kotlin.cfg.*;
 import org.jetbrains.kotlin.cfg.pseudocode.Pseudocode;
+import org.jetbrains.kotlin.diagnostics.Diagnostic;
+import org.jetbrains.kotlin.diagnostics.DiagnosticFactory;
 import org.jetbrains.kotlin.diagnostics.DiagnosticUtils;
+import org.jetbrains.kotlin.diagnostics.Errors;
 import org.jetbrains.kotlin.psi.JetElement;
 import org.jetbrains.kotlin.resolve.BindingTrace;
 import org.jetbrains.kotlin.resolve.BindingTraceContext;
+import org.jetbrains.pmdkotlin.lang.kotlin.KotlinFile;
 import org.jetbrains.pmdkotlin.lang.kotlin.KotlinParser;
 import org.w3c.dom.Document;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.jetbrains.kotlin.diagnostics.Errors.UNREACHABLE_CODE;
+
 public class KotlinASTNodeAdapter implements AbstractKotlinNode {
     protected int id;
-    protected KotlinParser parser;
+    // protected KotlinParser parser;
+    @NotNull protected KotlinFile kotlinFile;
 
     protected PsiElement innerNode;
     protected KotlinASTNodeAdapter parentNode;
@@ -41,36 +50,43 @@ public class KotlinASTNodeAdapter implements AbstractKotlinNode {
 
     public BindingTrace trace;
     public Pseudocode pseudocode;
+    //public PseudocodeVariablesData variablesData;
 
     public KotlinASTNodeAdapter(int id, KotlinParser parser) {
         this.id = id;
-        this.parser = parser;
+        //this.kotlinFile = kotlinFile;
     }
 
-    public KotlinASTNodeAdapter(PsiElement innerNode) {
-        this(innerNode, null);
+    public KotlinASTNodeAdapter(PsiElement innerNode, KotlinFile kotlinFile) {
+        this(innerNode, kotlinFile, null);
     }
 
-    public KotlinASTNodeAdapter(PsiElement innerNode, KotlinParser parser) {
-        this(innerNode, parser, null);
-    }
-
-    public KotlinASTNodeAdapter(PsiElement innerNode, KotlinParser parser, BindingTrace trace) {
-        this.parser = parser;
+    public KotlinASTNodeAdapter(PsiElement innerNode, KotlinFile kotlinFile, BindingTrace trace) {
+        this.kotlinFile = kotlinFile;
         this.innerNode = innerNode;
         this.trace = trace;
 
         if (this.trace == null) {
             this.trace = new BindingTraceContext();
         }
-        this.innerNode.putCopyableUserData(OUTER_NODE_KEY, this);
-        this.innerNode.putCopyableUserData(KotlinASTNodeAdapter.UNREACHABLE_KEY, Boolean.FALSE);
+
         if (this.innerNode instanceof JetElement) {
             this.pseudocode = new JetControlFlowProcessor(trace).generatePseudocode((JetElement) this.innerNode);
+            //this.flowInfoProvider = new JetFlowInformationProvider((JetElement) innerNode, this.trace);
         }
+
+        this.innerNode.putCopyableUserData(OUTER_NODE_KEY, this);
+        this.innerNode.putCopyableUserData(KotlinASTNodeAdapter.UNREACHABLE_KEY, Boolean.FALSE);
     }
 
-    @Override
+//    public PseudocodeVariablesData getPseudocodeVariablesData() {
+//        if (variablesData == null && pseudocode != null) {
+//            variablesData = new PseudocodeVariablesData(pseudocode, trace.getBindingContext());
+//        }
+//        return variablesData;
+//    }
+
+        @Override
     public Object jjtAccept(KotlinParserVisitor visitor, Object data) {
         innerNode.accept(visitor.toJetVisitor());
         return data;
@@ -109,10 +125,11 @@ public class KotlinASTNodeAdapter implements AbstractKotlinNode {
     }
 
     @Override
+    @NotNull
     public Node jjtGetParent() {
-        if (parentNode == null && innerNode != null) {
-            parentNode = new KotlinASTNodeAdapter(innerNode.getParent(), parser, trace);
-        }
+//        if (parentNode == null && innerNode != null) {
+//            parentNode = new KotlinASTNodeAdapter(innerNode.getParent(), kotlinFile, trace);
+//        }
 
         return parentNode;
     }
@@ -122,7 +139,7 @@ public class KotlinASTNodeAdapter implements AbstractKotlinNode {
             ASTNode[] innerChildren = innerNode.getNode().getChildren(null);
             children = new KotlinASTNodeAdapter[innerChildren.length];
             for (int i = 0; i < innerChildren.length; i++) {
-                children[i] = new KotlinASTNodeAdapter(innerChildren[i].getPsi(), parser, trace);
+                children[i] = new KotlinASTNodeAdapter(innerChildren[i].getPsi(), kotlinFile, trace);
                 children[i].jjtSetParent(this);
             }
         }
@@ -198,34 +215,22 @@ public class KotlinASTNodeAdapter implements AbstractKotlinNode {
 
     @Override
     public int getBeginLine() {
-        if (parser != null) {
-            return DiagnosticUtils.offsetToLineAndColumn(parser.getDocument(), innerNode.getTextRange().getStartOffset()).getLine();
-        }
-        return -1;
+        return kotlinFile.getBeginLine(innerNode.getTextRange());
     }
 
     @Override
     public int getBeginColumn() {
-        if (parser != null) {
-            return DiagnosticUtils.offsetToLineAndColumn(parser.getDocument(), innerNode.getTextRange().getStartOffset()).getColumn();
-        }
-        return -1;
+        return kotlinFile.getBeginColumn(innerNode.getTextRange());
     }
 
     @Override
     public int getEndLine() {
-        if (parser != null) {
-            return DiagnosticUtils.offsetToLineAndColumn(parser.getDocument(), innerNode.getTextRange().getEndOffset()).getLine();
-        }
-        return -1;
+        return kotlinFile.getEndLine(innerNode.getTextRange());
     }
 
     @Override
     public int getEndColumn() {
-        if (parser != null) {
-            return DiagnosticUtils.offsetToLineAndColumn(parser.getDocument(), innerNode.getTextRange().getEndOffset()).getColumn();
-        }
-        return -1;
+        return kotlinFile.getEndColumn(innerNode.getTextRange());
     }
 
     @Override
@@ -367,5 +372,12 @@ public class KotlinASTNodeAdapter implements AbstractKotlinNode {
     @Override
     public void setUserData(Object userData) {
         this.userData = userData;
+    }
+
+
+
+
+    public PsiElement findElementAt(int offset) {
+        return this.innerNode.findElementAt(offset);
     }
 }

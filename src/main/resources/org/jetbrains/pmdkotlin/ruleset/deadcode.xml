@@ -24,4 +24,106 @@
             ]]>
         </example>
     </rule>
+
+    <rule name="UnusedValue"
+          language="kotlin"
+          message="Unused value"
+          class="org.jetbrains.pmdkotlin.lang.kotlin.rule.deadcode.UnusedValueRule">
+
+        <description>
+            Unused value
+        </description>
+
+        <priority>3</priority>
+
+        <example>
+            <![CDATA[
+            ]]>
+        </example>
+    </rule>
+
+    <rule name="UnusedChangedValue"
+          language="kotlin"
+          message="Unused changed value"
+          class="org.jetbrains.pmdkotlin.lang.kotlin.rule.deadcode.UnusedChangedValueRule">
+
+        <description>
+            Unused changed value
+        </description>
+
+        <priority>3</priority>
+
+        <example>
+            <![CDATA[
+            ]]>
+        </example>
+    </rule>
+
+    <rule name="UnusedVariable"
+          language="kotlin"
+          message="Unused changed value"
+          class="org.jetbrains.pmdkotlin.lang.kotlin.rule.deadcode.UnusedVariableRule">
+
+        <description>
+            Unused variable
+        </description>
+
+        <priority>3</priority>
+
+        <example>
+            <![CDATA[
+            ]]>
+        </example>
+    </rule>
+
+    <rule name="UnusedParameter"
+          language="kotlin"
+          message="Unused changed value"
+          class="org.jetbrains.pmdkotlin.lang.kotlin.rule.deadcode.UnusedParameterRule">
+
+        <description>
+            Unused parameter
+        </description>
+
+        <priority>3</priority>
+
+        <example>
+            <![CDATA[
+            ]]>
+        </example>
+    </rule>
+
+    <rule name="AssignedButNeverAccessedVariable"
+          language="kotlin"
+          message="Assigned but never accessed variable"
+          class="org.jetbrains.pmdkotlin.lang.kotlin.rule.deadcode.AssignedButNeverAccessedVariableRule">
+
+        <description>
+            Assigned but never accessed variable
+        </description>
+
+        <priority>3</priority>
+
+        <example>
+            <![CDATA[
+            ]]>
+        </example>
+    </rule>
+
+    <rule name="VariableWithRedudantInitializer"
+          language="kotlin"
+          message="Variable with redudant initializer"
+          class="org.jetbrains.pmdkotlin.lang.kotlin.rule.deadcode.VariableWithRedudantInitializerRule">
+
+        <description>
+            Variable with redudant initializer
+        </description>
+
+        <priority>3</priority>
+
+        <example>
+            <![CDATA[
+            ]]>
+        </example>
+    </rule>
 </ruleset>
