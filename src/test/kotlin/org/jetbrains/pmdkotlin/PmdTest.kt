@@ -48,10 +48,9 @@ public class PmdTest {
         val config = PMDConfiguration()
         config.setRuleSets(getResourcePath("ruleset/deadcode.xml"))
         config.setReportFormat("html")
-        //config.setInputPaths("/home/user/pmd-kotlin/src/test/resources/org/jetbrains/pmdkotlin/deadCodeTests/UnusedFunctionTest.kt");
+        config.setInputPaths("/home/user/pmd-kotlin/src/test/resources/org/jetbrains/pmdkotlin/deadCodeTests/UnusedFunctionTest.kt");
         config.setInputPaths("/home/user/pmd-kotlin/src/test/resources/org/jetbrains/pmdkotlin/deadCodeTests/UnusedVariableTest.kt");
-        //config.setInputPaths("/home/user/pmd-kotlin/src/test/resources/org/jetbrains/pmdkotlin/trashTest.kt");
-        //config.setInputPaths("/home/user/pmd-kotlin/src/test/resources/org/jetbrains/pmdkotlin/deadCodeTests/UnreachableCodeTest.kt");
+        config.setInputPaths("/home/user/pmd-kotlin/src/test/resources/org/jetbrains/pmdkotlin/deadCodeTests/UnreachableCodeTest.kt");
         config.setThreads(0)
         config.setReportFile("atata.html")
         config.setDefaultLanguageVersion(KotlinLanguageModule().getDefaultVersion())
