@@ -3,18 +3,18 @@ package org.jetbrains.pmdkotlin
 import net.sourceforge.pmd.PMD
 import net.sourceforge.pmd.PMDConfiguration
 import org.jetbrains.pmdkotlin.lang.kotlin.KotlinLanguageModule
-import org.testng.annotations.BeforeTest
-import org.testng.annotations.Test
-import org.testng.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Before
+import org.junit.Test
 
 
 public class PmdTest {
 
-    BeforeTest
+    @Before
     public fun setUp() {
     }
 
-    Test
+    @Test
     public fun emptyTest() {
         val config = PMDConfiguration()
         config.setRuleSets(getResourcePath("ruleset/empty.xml"))
@@ -26,7 +26,7 @@ public class PmdTest {
         assertEquals(3, PMD.doPMD(config))
     }
 
-    Test
+    @Test
     public fun deprecatedTest() {
         val config = PMDConfiguration()
         config.setRuleSets(getResourcePath("ruleset/deprecated.xml"))
@@ -40,7 +40,7 @@ public class PmdTest {
         assertEquals(10, PMD.doPMD(config))
     }
 
-    Test
+    @Test
     public fun otherTest() {
         val config = PMDConfiguration()
         config.setRuleSets(getResourcePath("ruleset/deadcode.xml"))

@@ -1,6 +1,5 @@
 package org.jetbrains.pmdkotlin.cpd;
 
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.util.text.CharSequenceReader;
 import net.sourceforge.pmd.cpd.SourceCode;
@@ -9,7 +8,7 @@ import net.sourceforge.pmd.cpd.Tokenizer;
 import net.sourceforge.pmd.cpd.Tokens;
 import net.sourceforge.pmd.lang.LanguageRegistry;
 import net.sourceforge.pmd.lang.LanguageVersionHandler;
-import org.jetbrains.kotlin.lexer.JetTokens;
+import org.jetbrains.kotlin.lexer.KtTokens;
 import org.jetbrains.pmdkotlin.lang.kotlin.KotlinLanguageModule;
 import org.jetbrains.pmdkotlin.lang.kotlin.KotlinParser;
 import org.jetbrains.pmdkotlin.lang.kotlin.KotlinTokenManager;
@@ -35,8 +34,8 @@ public class KotlinTokenizer implements Tokenizer {
         KotlinToken currentToken = (KotlinToken) tokenManager.getCurrentToken();
 
         while (currentToken != null) {
-            if (currentToken.tokenType.equals(JetTokens.IDENTIFIER) && currentToken.image.equals("import")) {
-                currentToken.tokenType = JetTokens.IMPORT_KEYWORD;
+            if (currentToken.tokenType.equals(KtTokens.IDENTIFIER) && currentToken.image.equals("import")) {
+                currentToken.tokenType = KtTokens.IMPORT_KEYWORD;
             }
 
             discarder.updateState(currentToken);
@@ -52,12 +51,12 @@ public class KotlinTokenizer implements Tokenizer {
         String image = currentToken.image;
         IElementType currentTokenType = currentToken.tokenType;
 
-        boolean isLiteral = (currentTokenType.equals(JetTokens.BLOCK_COMMENT)
-                || currentTokenType.equals(JetTokens.CHARACTER_LITERAL)
-                || currentTokenType.equals(JetTokens.INTEGER_LITERAL)
-                || currentTokenType.equals(JetTokens.FLOAT_LITERAL));
+        boolean isLiteral = (currentTokenType.equals(KtTokens.BLOCK_COMMENT)
+                || currentTokenType.equals(KtTokens.CHARACTER_LITERAL)
+                || currentTokenType.equals(KtTokens.INTEGER_LITERAL)
+                || currentTokenType.equals(KtTokens.FLOAT_LITERAL));
 
-        if ((currentTokenType.equals(JetTokens.IDENTIFIER) && (ignoreIdentifiers && !tokenManager.isTypeToken(currentToken)))
+        if ((currentTokenType.equals(KtTokens.IDENTIFIER) && (ignoreIdentifiers && !tokenManager.isTypeToken(currentToken)))
                 || (isLiteral && ignoreLiterals)) {
             tokenEntries.add(new TokenEntry(currentToken.tokenType.toString(), currentToken.filename, currentToken.beginLine));
         } else {
@@ -92,32 +91,32 @@ public class KotlinTokenizer implements Tokenizer {
         }
 
         private void skipSemicolon(KotlinToken currentToken) {
-            discardingSemicolon = currentToken.tokenType.equals(JetTokens.SEMICOLON);
+            discardingSemicolon = currentToken.tokenType.equals(KtTokens.SEMICOLON);
         }
 
         private void skipWhiteSpaces(KotlinToken currentToken) {
-            discardingWhiteSpaces = currentToken.tokenType.equals(JetTokens.WHITE_SPACE);
+            discardingWhiteSpaces = currentToken.tokenType.equals(KtTokens.WHITE_SPACE);
         }
 
         private void skipComments(KotlinToken currentToken) {
-            discardingComments = currentToken.tokenType.equals(JetTokens.BLOCK_COMMENT) || currentToken.equals(JetTokens.EOL_COMMENT);
+            discardingComments = currentToken.tokenType.equals(KtTokens.BLOCK_COMMENT) || currentToken.equals(KtTokens.EOL_COMMENT);
         }
 
         private void skipPackagesAndImports(KotlinToken currentToken) {
             IElementType currentTokenType = currentToken.tokenType;
-            if (currentTokenType.equals(JetTokens.PACKAGE_KEYWORD)
-                    || currentTokenType.equals(JetTokens.IMPORT_KEYWORD)
-                    || currentTokenType.equals(JetTokens.AS_KEYWORD)) {
+            if (currentTokenType.equals(KtTokens.PACKAGE_KEYWORD)
+                    || currentTokenType.equals(KtTokens.IMPORT_KEYWORD)
+                    || currentTokenType.equals(KtTokens.AS_KEYWORD)) {
                 discardingKeywords = true;
                 expectedIdentifier = true;
                 expectedDot = false;
-            } else if (discardingKeywords && expectedIdentifier && currentTokenType.equals(JetTokens.IDENTIFIER)) {
+            } else if (discardingKeywords && expectedIdentifier && currentTokenType.equals(KtTokens.IDENTIFIER)) {
                 expectedIdentifier = false;
                 expectedDot = true;
-            } else if (discardingKeywords && expectedIdentifier && currentTokenType.equals(JetTokens.MUL)) {
+            } else if (discardingKeywords && expectedIdentifier && currentTokenType.equals(KtTokens.MUL)) {
                 discardingKeywords = false;
             } else if (discardingKeywords && expectedDot) {
-                if (currentTokenType.equals(JetTokens.DOT)) {
+                if (currentTokenType.equals(KtTokens.DOT)) {
                     expectedIdentifier = true;
                     expectedDot = false;
                 } else {

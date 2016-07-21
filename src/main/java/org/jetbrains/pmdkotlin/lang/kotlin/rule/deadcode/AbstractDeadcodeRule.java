@@ -2,13 +2,11 @@ package org.jetbrains.pmdkotlin.lang.kotlin.rule.deadcode;
 
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.kotlin.cfg.JetFlowInformationProvider;
 import org.jetbrains.kotlin.diagnostics.Diagnostic;
 import org.jetbrains.kotlin.diagnostics.DiagnosticFactory;
-import org.jetbrains.kotlin.psi.JetElement;
+import org.jetbrains.kotlin.psi.KtElement;
 import org.jetbrains.kotlin.resolve.BindingTrace;
 import org.jetbrains.kotlin.resolve.BindingTraceContext;
-import org.jetbrains.pmdkotlin.lang.kotlin.ast.KotlinASTNodeAdapter;
 import org.jetbrains.pmdkotlin.lang.kotlin.rule.AbstractKotlinRule;
 
 import java.util.HashMap;
@@ -37,14 +35,15 @@ public abstract class AbstractDeadcodeRule extends AbstractKotlinRule {
         this.myViolation = myViolation;
     }
 
-    protected void processElement(JetElement element) {}
+    protected void processElement(KtElement element) {
+    }
 
     protected abstract void addViolation(PsiElement element);
 
     @Override
     public void visitElementPMD(PsiElement element) {
-        if (element instanceof JetElement) {
-            processElement((JetElement) element);
+        if (element instanceof KtElement) {
+            processElement((KtElement) element);
 
             boolean isViolated = violations.containsKey(element) && violations.get(element).contains(myViolation);
             if (isViolated) {

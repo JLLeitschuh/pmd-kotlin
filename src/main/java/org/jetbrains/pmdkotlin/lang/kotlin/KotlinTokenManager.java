@@ -5,14 +5,15 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.PsiTreeUtil;
 import net.sourceforge.pmd.lang.TokenManager;
-import org.jetbrains.kotlin.lexer.JetLexer;
-import org.jetbrains.kotlin.lexer.JetTokens;
-import org.jetbrains.kotlin.psi.JetTypeElement;
+import org.jetbrains.kotlin.lexer.KotlinLexer;
+import org.jetbrains.kotlin.lexer.KtTokens;
+import org.jetbrains.kotlin.psi.KtTypeElement;
 import org.jetbrains.pmdkotlin.cpd.KotlinToken;
 
-public class KotlinTokenManager extends JetLexer implements TokenManager, JetTokens {
+public class KotlinTokenManager extends KotlinLexer implements TokenManager, KtTokens {
     private static ThreadLocal<String> fileName = new ThreadLocal();
     public KotlinFileContext kotlinFileContext;
+
     public KotlinTokenManager() {
         super();
     }
@@ -55,7 +56,7 @@ public class KotlinTokenManager extends JetLexer implements TokenManager, JetTok
 
     public static String getFileName() {
         String fileName_ = fileName.get();
-        return fileName_ == null?"(no file name provided)":fileName_;
+        return fileName_ == null ? "(no file name provided)" : fileName_;
     }
 
     public PsiElement findElementAt(int offset) {
@@ -64,6 +65,6 @@ public class KotlinTokenManager extends JetLexer implements TokenManager, JetTok
 
     public boolean isTypeToken(KotlinToken token) {
         PsiElement leaf = findElementAt(token.ofset);
-        return PsiTreeUtil.getParentOfType(leaf, JetTypeElement.class) != null;
+        return PsiTreeUtil.getParentOfType(leaf, KtTypeElement.class) != null;
     }
 }

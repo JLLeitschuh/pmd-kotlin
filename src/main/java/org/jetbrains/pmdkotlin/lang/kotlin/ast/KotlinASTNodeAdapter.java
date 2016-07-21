@@ -45,14 +45,14 @@ public class KotlinASTNodeAdapter implements AbstractKotlinNode {
 
     @Override
     public Object jjtAccept(KotlinParserVisitor visitor, Object data) {
-        innerNode.accept(visitor.toJetVisitor());
+        innerNode.accept(visitor.toKtVisitor());
         return data;
     }
 
     @Override
     public Object childrenAccept(KotlinParserVisitor visitor, Object data) {
         childrenPropagation();
-        innerNode.acceptChildren(visitor.toJetVisitor());
+        innerNode.acceptChildren(visitor.toKtVisitor());
 
         return data;
     }

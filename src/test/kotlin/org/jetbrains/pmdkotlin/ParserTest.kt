@@ -1,39 +1,35 @@
 package org.jetbrains.pmdkotlin
 
 import net.sourceforge.pmd.lang.ParserOptions
-import org.jetbrains.kotlin.psi.JetPackageDirective
+import org.jetbrains.kotlin.psi.KtPackageDirective
 import org.jetbrains.pmdkotlin.lang.kotlin.KotlinParser
-import org.jetbrains.pmdkotlin.lang.kotlin.ast.AbstractKotlinNode
-import org.jetbrains.pmdkotlin.lang.kotlin.ast.KotlinASTNodeAdapter
-import org.jetbrains.pmdkotlin.lang.kotlin.ast.KotlinParserVisitorAdapter
-import org.testng.Assert
-import org.testng.annotations.Test
+import org.jetbrains.pmdkotlin.lang.kotlin.ast.KotlinParserVisitor
+import org.junit.Assert.assertEquals
+import org.junit.Test
+import java.io.FileReader
 
-import java.io.*
-
-Test
 public class ParserTest {
 
     private val parser = KotlinParser(ParserOptions())
 
-    Test
+    @Test
     public fun testEmptyInput() {
         val file = "".asKtFile()
 
-        parser.parse(file.getAbsolutePath(), FileReader(file))
+        parser.parse(file.absolutePath, FileReader(file))
     }
 
-    Test
+    @Test
     public fun testPackageDirective() {
         val file = "package org.jetbrains.pmdkotlin".asKtFile()
-        val adapter = object : KotlinParserVisitorAdapter() {
-            override fun visitPackageDirectivePMD(directive: JetPackageDirective, data: Any?): Any? {
-                Assert.assertEquals(directive.getText(), "package org.jetbrains.pmdkotlin")
+        val adapter = object : KotlinParserVisitor {
+            override fun visitPackageDirectivePMD(directive: KtPackageDirective, data: Any?): Any? {
+                assertEquals(directive.text, "package org.jetbrains.pmdkotlin")
                 return super.visitPackageDirectivePMD(directive, data)
             }
         }
 
-        val root = parser.parse(file.getAbsolutePath(), FileReader(file))
+        val root = parser.parse(file.absolutePath, FileReader(file))
         root.jjtAccept(adapter, null)
     }
 

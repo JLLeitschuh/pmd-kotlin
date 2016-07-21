@@ -1,36 +1,29 @@
 package org.jetbrains.pmdkotlin
 
-import net.sourceforge.pmd.cpd.*
-import net.sourceforge.pmd.lang.ParserOptions
-import org.jetbrains.kotlin.codegen.FrameMap
+import net.sourceforge.pmd.cpd.CPD
+import net.sourceforge.pmd.cpd.CPDConfiguration
+import net.sourceforge.pmd.cpd.Match
 import org.jetbrains.pmdkotlin.cpd.KotlinLanguage
-import org.jetbrains.pmdkotlin.lang.kotlin.KotlinParser
-import org.testng.annotations.BeforeTest
-import org.testng.annotations.Test
-import java.io.File
-import java.io.FileNotFoundException
-import java.io.FileReader
+import org.junit.Before
+import org.junit.Test
 import java.io.PrintWriter
-import java.net.URISyntaxException
-import java.util.*
-
-import org.mockito.Mockito.mock
 
 // todo: add detailed asserts for matches
-public class CpdTest {
+class CpdTest {
 
     var config: CPDConfiguration = CPDConfiguration()
     var cpd: CPD = CPD(config)
     private var hm: MutableMap<String, String>? = null
 
-    BeforeTest fun setUp() {
+    @Before
+    fun setUp() {
         config = CPDConfiguration()
         with(config) {
-            setLanguage(KotlinLanguage())
-            setEncoding("UTF-8")
-            setMinimumTileSize(30)
-            setIgnoreIdentifiers(true)
-            setIgnoreLiterals(true)
+            language = KotlinLanguage()
+            encoding = "UTF-8"
+            minimumTileSize = 30
+            isIgnoreIdentifiers = true
+            isIgnoreLiterals = true
         }
         cpd = CPD(config)
     }
@@ -56,7 +49,8 @@ public class CpdTest {
 //        parser.parse(file.getAbsolutePath(), FileReader(file))
 //    }
 //
-    Test fun falsePositives(){
+@Test
+fun falsePositives() {
         cpd.add(getResource("cpd/KotlinParserVisitor.kt"))
         cpd.go()
         show(cpd.getMatches())
@@ -90,17 +84,17 @@ public class CpdTest {
     //        show(cpd.getMatches());
     //    }
 
-    public fun show(matches: Iterator<Match>) {
+    fun show(matches: Iterator<Match>) {
         val pw = PrintWriter("cpd_results.txt")
         while (matches.hasNext()) {
             val match = matches.next()
             pw.println(match.toString())
 
-            for (m in match.getMarkSet()) {
-                pw.println(m.getBeginLine())
-                pw.println(m.getEndLine());
+            for (m in match.markSet) {
+                pw.println(m.beginLine)
+                pw.println(m.endLine);
             }
-            pw.println(match.getSourceCodeSlice())
+            pw.println(match.sourceCodeSlice)
         }
         pw.close()
     }

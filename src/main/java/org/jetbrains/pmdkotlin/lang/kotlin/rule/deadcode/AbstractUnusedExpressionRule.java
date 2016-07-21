@@ -1,9 +1,9 @@
 package org.jetbrains.pmdkotlin.lang.kotlin.rule.deadcode;
 
 import com.intellij.psi.PsiElement;
-import org.jetbrains.kotlin.cfg.JetFlowInformationProvider;
+import org.jetbrains.kotlin.cfg.ControlFlowInformationProvider;
 import org.jetbrains.kotlin.diagnostics.DiagnosticFactory;
-import org.jetbrains.kotlin.psi.JetElement;
+import org.jetbrains.kotlin.psi.KtElement;
 import org.jetbrains.pmdkotlin.lang.kotlin.ast.KotlinASTNodeAdapter;
 
 public abstract class AbstractUnusedExpressionRule extends AbstractDeadcodeRule {
@@ -12,10 +12,8 @@ public abstract class AbstractUnusedExpressionRule extends AbstractDeadcodeRule 
     }
 
     @Override
-    protected void processElement(JetElement element) {
-        JetFlowInformationProvider provider = new JetFlowInformationProvider(element, AbstractDeadcodeRule.trace);
-        provider.markStatements();
-        provider.markUnusedExpressions();
+    protected void processElement(KtElement element) {
+        ControlFlowInformationProvider provider = new ControlFlowInformationProvider(element, AbstractDeadcodeRule.trace);
     }
 
     @Override
