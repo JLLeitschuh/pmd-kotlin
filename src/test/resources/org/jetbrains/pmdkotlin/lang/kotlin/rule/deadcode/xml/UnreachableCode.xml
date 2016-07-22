@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<test-data>
+    <test-code>
+        <description>No unreachable code existing.</description>
+        <expected-problems>0</expected-problems>
+        <code><![CDATA[
+class Foo {
+    fun bar() {
+        return
+    }
+
+    fun bar2(test: Any?):Any? {
+        return test
+    }
+}
+     ]]></code>
+    </test-code>
+    <test-code>
+        <description>Unreachable code after return</description>
+        <expected-problems>2</expected-problems>
+        <code><![CDATA[
+class Foo {
+    fun bar() {
+        return
+        val i = 0
+    }
+
+    fun bar2(test: Any?):Any? {
+        return test
+        test = 0
+    }
+}
+     ]]></code>
+    </test-code>
+    <test-code>
+        <description>Unreachable code in inner function.</description>
+        <expected-problems>1</expected-problems>
+        <code><![CDATA[
+class Foo {
+    fun bar() {
+        return
+
+        fun bar2(test: Any?):Any? {
+            return test;
+        }
+    }
+}
+     ]]></code>
+    </test-code>
+    <test-code>
+        <description>Unreachable code in always fixed if case.</description>
+        <expected-problems>2</expected-problems>
+        <code><![CDATA[
+class Foo {
+    fun bar(): {
+        if(true){
+            val state = "active"
+        } else {
+            val state = "inactive"
+        }
+    }
+
+    fun bar2(): {
+        if(false){
+            val state = "inactive"
+        } else {
+            val state = "active"
+        }
+    }
+}
+     ]]></code>
+    </test-code>
+</test-data>

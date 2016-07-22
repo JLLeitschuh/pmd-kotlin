@@ -25,7 +25,7 @@ version = "0.1"
 
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
-    compile "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
+//    compile "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
     compile "org.jetbrains.kotlin:kotlin-compiler:$kotlinVersion"
     compile 'net.sourceforge.pmd:pmd-core:5.4.1'
     compile 'net.sourceforge.pmd:pmd-test:5.4.1'

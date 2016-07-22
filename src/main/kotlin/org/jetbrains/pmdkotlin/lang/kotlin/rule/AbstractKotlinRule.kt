@@ -10,9 +10,12 @@ import org.jetbrains.pmdkotlin.lang.kotlin.ast.AbstractKotlinNode
 import org.jetbrains.pmdkotlin.lang.kotlin.ast.KotlinASTNodeAdapter
 import org.jetbrains.pmdkotlin.lang.kotlin.ast.KotlinParserVisitor
 
-public open class AbstractKotlinRule : AbstractRule(), KotlinParserVisitor, ImmutableLanguage {
+open class AbstractKotlinRule : AbstractRule(), KotlinParserVisitor, ImmutableLanguage {
+
+    var savedData: Any? = null
+
     init {
-        super<AbstractRule>.setLanguage(LanguageRegistry.getLanguage(KotlinLanguageModule.NAME))
+        super.setLanguage(LanguageRegistry.getLanguage(KotlinLanguageModule.NAME))
     }
 
     override fun apply(nodes: List<Node>, ctx: RuleContext) {
@@ -28,10 +31,8 @@ public open class AbstractKotlinRule : AbstractRule(), KotlinParserVisitor, Immu
         }
     }
 
-    public fun visit(node: Node, data: Any): Any? {
+    protected fun visit(node: Node, data: Any): Any? {
         (node as AbstractKotlinNode).jjtAccept(this, data)
         return data
     }
-
-    protected var savedData: Any? = null
 }

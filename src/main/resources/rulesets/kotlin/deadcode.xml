@@ -127,23 +127,6 @@
         </example>
     </rule>
 
-    <rule name="UnusedFunctionLiteral"
-          language="kotlin"
-          message="Variable with redudant initializer"
-          class="org.jetbrains.pmdkotlin.lang.kotlin.rule.deadcode.UnusedFunctionLiteralRule">
-
-        <description>
-            Unused function literal
-        </description>
-
-        <priority>3</priority>
-
-        <example>
-            <![CDATA[
-            ]]>
-        </example>
-    </rule>
-
     <rule name="UnusedExpression"
           language="kotlin"
           message="Variable with redudant initializer"

@@ -8,13 +8,13 @@ import org.jetbrains.kotlin.psi.KtDeclarationWithBody
 import org.jetbrains.kotlin.psi.KtElement
 import org.jetbrains.pmdkotlin.lang.kotlin.ast.KotlinASTNodeAdapter
 
-public class UnreachableCodeRule : AbstractDeadcodeRule(Errors.UNREACHABLE_CODE) {
+class UnreachableCodeRule : AbstractDeadcodeRule(Errors.UNREACHABLE_CODE) {
     override fun addViolation(element: PsiElement) {
         val outerNode = element.getCopyableUserData<Node>(KotlinASTNodeAdapter.OUTER_NODE_KEY)
         addViolation(savedData, outerNode, arrayOf(outerNode?.beginLine, outerNode?.endLine))
     }
 
-    protected override fun processElement(element: KtElement) {
+    override fun processElement(element: KtElement) {
         if (element is KtDeclarationWithBody) {
             ControlFlowInformationProvider(element, AbstractDeadcodeRule.trace).checkFunction(null)
         }

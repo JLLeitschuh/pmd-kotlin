@@ -45,13 +45,15 @@ public class KotlinTokenManager extends KotlinLexer implements TokenManager, KtT
         return null;
     }
 
+    @Override
     public Object getNextToken() {
         advance();
         return getCurrentToken();
     }
 
-    public void setFileName(String fileName_) {
-        fileName.set(fileName_);
+    @Override
+    public void setFileName(String fileName) {
+        KotlinTokenManager.fileName.set(fileName);
     }
 
     public static String getFileName() {

@@ -10,6 +10,7 @@ import net.sourceforge.pmd.lang.Parser;
 import net.sourceforge.pmd.lang.ParserOptions;
 import net.sourceforge.pmd.lang.TokenManager;
 import net.sourceforge.pmd.lang.ast.ParseException;
+import org.jetbrains.kotlin.KtNodeTypes;
 import org.jetbrains.pmdkotlin.lang.kotlin.ast.AbstractKotlinNode;
 import org.jetbrains.pmdkotlin.lang.kotlin.ast.KotlinASTNodeAdapter;
 
@@ -18,18 +19,19 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class KotlinParser implements Parser {
-    private PsiParser parser;
-    protected final ParserOptions parserOptions;
+    private org.jetbrains.kotlin.parsing.KotlinParser parser;
+
+    private final ParserOptions parserOptions;
 
     public KotlinParser(ParserOptions parserOptions) {
         this.parserOptions = parserOptions;
-        parser = KotlinFileContext.parserDefinition.createParser(KotlinFileContext.project);
+        PsiParser intendedParser = KotlinFileContext.parserDefinition.createParser(KotlinFileContext.project);
+        if (intendedParser instanceof org.jetbrains.kotlin.parsing.KotlinParser) {
+            parser = (org.jetbrains.kotlin.parsing.KotlinParser) intendedParser;
+        } else {
+            throw new IllegalStateException("KotlinParser not found!");
+        }
     }
-
-//    @Override
-//    public TokenManager createTokenManager(Reader source) {
-//        return new KotlinTokenManager(source);
-//    }
 
 
     @Override
@@ -63,8 +65,13 @@ public class KotlinParser implements Parser {
     public AbstractKotlinNode parse(String fileName, Reader source) throws ParseException {
         KotlinFileContext kotlinContext = new KotlinFileContext(fileName, source);
         try {
-            PsiBuilder builder = new PsiBuilderImpl(kotlinContext.project, kotlinContext.psiFile, kotlinContext.parserDefinition, new KotlinTokenManager(), null, kotlinContext.sourceCodeToString(), null, null);
-            return new KotlinASTNodeAdapter(builder.getTreeBuilt().getPsi(), kotlinContext);
+            PsiBuilder builder = new PsiBuilderImpl(KotlinFileContext.project, kotlinContext.psiFile, KotlinFileContext.parserDefinition, new KotlinTokenManager(), null, kotlinContext.sourceCodeToString(), null, null);
+            FileElement root = (FileElement) parser.parse(KtNodeTypes.KT_FILE, builder, kotlinContext.psiFile);
+            root.setPsi(kotlinContext.psiFile.getNode().getPsi());
+
+            showTree(root, "Parsed tree");
+
+            return new KotlinASTNodeAdapter(root.getPsi(), kotlinContext);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

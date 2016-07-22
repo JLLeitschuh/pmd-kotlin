@@ -1,5 +1,6 @@
 package org.jetbrains.pmdkotlin.lang.kotlin;
 
+import com.intellij.lang.Language;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.Project;
@@ -9,6 +10,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.local.CoreLocalFileSystem;
 import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiFileFactory;
 import com.intellij.psi.PsiManager;
 import org.apache.commons.io.IOUtils;
 import org.jetbrains.kotlin.cli.jvm.compiler.EnvironmentConfigFiles;
@@ -26,24 +28,29 @@ public class KotlinFileContext {
     private final static Disposable rootDisposable = Disposer.newDisposable();
     private final static KotlinCoreEnvironment environment = KotlinCoreEnvironment.createForProduction(rootDisposable, configuration, EnvironmentConfigFiles.JVM_CONFIG_FILES);
 
-    public final static Project project = environment.getProject();
+    final static Project project = environment.getProject();
     private final static PsiManager manager = PsiManager.getInstance(project);
-    public final static KotlinParserDefinition parserDefinition = KotlinParserDefinition.Companion.getInstance();
+    final static KotlinParserDefinition parserDefinition = KotlinParserDefinition.Companion.getInstance();
 
-    public PsiFile psiFile;
-    public String filename;
+    PsiFile psiFile;
+    String filename;
 
-    private VirtualFile virtualFile;
-    private FileViewProvider provider;
     private Document document;
     private Reader sourceCode;
 
 
     public KotlinFileContext(String fileName, Reader source) {
         this.filename = fileName;
-        virtualFile = new CoreLocalFileSystem().findFileByPath(fileName);
-        provider = manager.findViewProvider(virtualFile);
-        psiFile = parserDefinition.createFile(provider);
+
+        if (fileName != null && !fileName.isEmpty() && !fileName.equals("n/a")) {
+            VirtualFile virtualFile = new CoreLocalFileSystem().findFileByPath(fileName);
+            FileViewProvider provider = manager.findViewProvider(virtualFile);
+            psiFile = parserDefinition.createFile(provider);
+        } else {
+            PsiFileFactory fileFactory = PsiFileFactory.getInstance(project);
+            psiFile = fileFactory.createFileFromText("Xmlcode.kt", Language.findLanguageByID(KotlinLanguageModule.TERSE_NAME), "<" + fileName + "/>");
+        }
+
         document = psiFile.getViewProvider().getDocument();
         sourceCode = source;
     }
