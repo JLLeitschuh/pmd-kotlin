@@ -8,3 +8,7 @@ fun String.asKtFile(): File {
     FileWriter(file).use { it.write(this) }
     return file
 }
+
+fun Any.getResource(path: String): File {
+    return File(javaClass.getResource(path).toURI())
+}

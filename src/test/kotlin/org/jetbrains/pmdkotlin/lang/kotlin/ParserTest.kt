@@ -1,8 +1,8 @@
-package org.jetbrains.pmdkotlin
+package org.jetbrains.pmdkotlin.lang.kotlin
 
 import net.sourceforge.pmd.lang.ParserOptions
 import org.jetbrains.kotlin.psi.KtPackageDirective
-import org.jetbrains.pmdkotlin.lang.kotlin.KotlinParser
+import org.jetbrains.pmdkotlin.asKtFile
 import org.jetbrains.pmdkotlin.lang.kotlin.ast.KotlinParserVisitor
 import org.junit.Assert.assertEquals
 import org.junit.Test
