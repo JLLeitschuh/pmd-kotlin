@@ -69,7 +69,7 @@ public class KotlinParser implements Parser {
             FileElement root = (FileElement) parser.parse(KtNodeTypes.KT_FILE, builder, kotlinContext.psiFile);
             root.setPsi(kotlinContext.psiFile.getNode().getPsi());
 
-            showTree(root, "Parsed tree");
+//            showTree(root, "Parsed tree");
 
             return new KotlinASTNodeAdapter(root.getPsi(), kotlinContext);
         } catch (Exception e) {

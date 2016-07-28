@@ -23,7 +23,7 @@ public class KotlinTokenizer implements Tokenizer {
     }
 
     public void tokenize(SourceCode sourceCode, Tokens tokenEntries) {
-        LanguageVersionHandler languageVersionHandler = LanguageRegistry.getLanguage(KotlinLanguageModule.NAME).getDefaultVersion().getLanguageVersionHandler();
+        LanguageVersionHandler languageVersionHandler = LanguageRegistry.getLanguage(KotlinLanguageModule.Companion.getNAME()).getDefaultVersion().getLanguageVersionHandler();
 
         KotlinParser parser = (KotlinParser) languageVersionHandler.getParser(languageVersionHandler.getDefaultParserOptions());
 

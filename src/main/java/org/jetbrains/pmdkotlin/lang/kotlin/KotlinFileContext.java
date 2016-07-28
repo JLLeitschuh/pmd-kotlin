@@ -49,7 +49,7 @@ public class KotlinFileContext {
             psiFile = parserDefinition.createFile(provider);
         } else {
             PsiFileFactory fileFactory = PsiFileFactory.getInstance(project);
-            psiFile = fileFactory.createFileFromText("Xmlcode.kt", Language.findLanguageByID(KotlinLanguageModule.TERSE_NAME), sourceCodeToString());
+            psiFile = fileFactory.createFileFromText("Xmlcode.kt", Language.findLanguageByID(KotlinLanguageModule.Companion.getTERSE_NAME()), sourceCodeToString());
         }
 
         document = psiFile.getViewProvider().getDocument();
