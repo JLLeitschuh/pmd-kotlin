@@ -6,7 +6,7 @@ import org.jetbrains.kotlin.psi.*
 import org.jetbrains.pmdkotlin.lang.kotlin.ast.KotlinASTNodeAdapter
 import org.jetbrains.pmdkotlin.lang.kotlin.rule.AbstractKotlinRule
 
-public class SimplifyNegatedBinaryExpressionRule: AbstractKotlinRule() {
+public class SimplifyNegatedBinaryExpression : AbstractKotlinRule() {
     public override fun visitPrefixExpressionPMD(expression: KtPrefixExpression, data: Any?): Any? {
         if (isApplicable(expression)) {
             addViolation(savedData, expression.getCopyableUserData(KotlinASTNodeAdapter.OUTER_NODE_KEY))

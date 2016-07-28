@@ -8,40 +8,6 @@
         The Deprecated Code ruleset.
     </description>
 
-    <rule name="DeprecatedTraitKeyword"
-          language="kotlin"
-          message="'trait' keyword is deprecated, use 'interface' instead"
-          class="org.jetbrains.pmdkotlin.lang.kotlin.rule.deprecated.DeprecatedTraitKeyword">
-
-        <description>
-            Trait keyword is deprecated
-        </description>
-
-        <priority>3</priority>
-
-        <example>
-            <![CDATA[
-            ]]>
-        </example>
-    </rule>
-
-    <rule name="DeprecatedSuperConstructorInEnum"
-          language="kotlin"
-          message="Enum entry {0} uses deprecated super constructor syntax, use ENTRY(arguments) instead"
-          class="org.jetbrains.pmdkotlin.lang.kotlin.rule.deprecated.DeprecatedEnumSuperConstructor">
-
-        <description>
-            Enum entry uses deprecated super constructor syntax, use ENTRY(arguments) instead
-        </description>
-
-        <priority>3</priority>
-
-        <example>
-            <![CDATA[
-            ]]>
-        </example>
-    </rule>
-
     <rule name="EnumEntryUsesDeprecatedOrNoDelimiter"
           language="kotlin"
           message="Enum entry {0} should have a correct delimiter ''{1}'' after it"
@@ -49,23 +15,6 @@
 
         <description>
             Enum entry should have a correct delimiter after it
-        </description>
-
-        <priority>3</priority>
-
-        <example>
-            <![CDATA[
-            ]]>
-        </example>
-    </rule>
-
-    <rule name="DeprecatedLambdaSyntax"
-          language="kotlin"
-          message="This syntax for lambda is deprecated. "
-          class="org.jetbrains.pmdkotlin.lang.kotlin.rule.deprecated.DeprecatedLambdaSyntax">
-
-        <description>
-            This syntax for lambda is deprecated. Use short lambda notation {a[: Int], b[: String] -> ...} or function expression instead.
         </description>
 
         <priority>3</priority>

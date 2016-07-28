@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<test-data>
+    <test-code>
+        <description>Empty catch block</description>
+        <expected-problems>1</expected-problems>
+        <code><![CDATA[
+fun main() {
+    try {
+
+    } catch (e: Exception) {
+
+    } finally {
+
+    }
+}
+     ]]></code>
+    </test-code>
+</test-data>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<test-data>
+    <test-code>
+        <description>Two unused variables</description>
+        <expected-problems>2</expected-problems>
+        <code><![CDATA[
+fun main4(args: Array<String>) {
+    val a = 5
+    var b = 3
+}
+     ]]></code>
+    </test-code>
+</test-data>
