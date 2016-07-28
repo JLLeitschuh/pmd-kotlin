@@ -393,7 +393,7 @@ interface KotlinParserVisitor {
 
     fun visitElementPMD(element: PsiElement) {
 //        System.out.println("VisitElementPMD " + element.node)
-        (element.getCopyableUserData(KotlinASTNodeAdapter.OUTER_NODE_KEY) as KotlinASTNodeAdapter).childrenAccept(this, null)
+        (element.getCopyableUserData(KotlinASTNodeAdapter.OUTER_NODE_KEY) as KotlinASTNodeAdapter).childrenAccept(this, "")
     }
 
     fun visitKtElementPMD(element: KtElement, data: Any?): Any? {
