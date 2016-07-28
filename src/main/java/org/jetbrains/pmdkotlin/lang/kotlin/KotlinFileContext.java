@@ -41,6 +41,7 @@ public class KotlinFileContext {
 
     public KotlinFileContext(String fileName, Reader source) {
         this.filename = fileName;
+        this.sourceCode = source;
 
         if (fileName != null && !fileName.isEmpty() && !fileName.equals("n/a")) {
             VirtualFile virtualFile = new CoreLocalFileSystem().findFileByPath(fileName);
@@ -48,11 +49,10 @@ public class KotlinFileContext {
             psiFile = parserDefinition.createFile(provider);
         } else {
             PsiFileFactory fileFactory = PsiFileFactory.getInstance(project);
-            psiFile = fileFactory.createFileFromText("Xmlcode.kt", Language.findLanguageByID(KotlinLanguageModule.TERSE_NAME), "<" + fileName + "/>");
+            psiFile = fileFactory.createFileFromText("Xmlcode.kt", Language.findLanguageByID(KotlinLanguageModule.TERSE_NAME), sourceCodeToString());
         }
 
         document = psiFile.getViewProvider().getDocument();
-        sourceCode = source;
     }
 
     public String sourceCodeToString() {
