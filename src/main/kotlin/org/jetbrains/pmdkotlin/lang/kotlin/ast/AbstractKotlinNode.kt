@@ -4,7 +4,7 @@ import com.intellij.psi.PsiElement
 import net.sourceforge.pmd.lang.ast.Node
 
 interface AbstractKotlinNode : Node {
-    fun jjtAccept(visitor: KotlinParserVisitor, data: Any): Any
+    fun jjtAccept(visitor: KotlinParserVisitor, data: Any = ""): Any
 
     fun childrenAccept(visitor: KotlinParserVisitor, data: Any): Any
 
