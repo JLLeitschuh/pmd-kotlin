@@ -48,7 +48,7 @@ class KotlinFileContext(internal var filename: String, private val sourceCode: R
     }
 
     fun getBeginLine(range: TextRange): Int {
-        return findLineAndColumn(range.endOffset).line
+        return findLineAndColumn(range.startOffset).line
     }
 
     fun getBeginColumn(range: TextRange): Int {
