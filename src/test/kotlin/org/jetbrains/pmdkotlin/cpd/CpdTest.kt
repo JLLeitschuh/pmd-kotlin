@@ -3,7 +3,7 @@ package org.jetbrains.pmdkotlin.cpd
 import net.sourceforge.pmd.cpd.CPD
 import net.sourceforge.pmd.cpd.CPDConfiguration
 import net.sourceforge.pmd.cpd.Match
-import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
 import org.jetbrains.pmdkotlin.getResource
 import org.junit.Before
 import org.junit.Test
@@ -17,7 +17,7 @@ class CpdTest {
     fun setUp() {
         config.language = KotlinLanguage()
         config.encoding = "UTF-8"
-        config.minimumTileSize = 30
+        config.minimumTileSize = 10
         config.isIgnoreIdentifiers = true
         config.isIgnoreLiterals = true
         cpd = CPD(config)
@@ -33,8 +33,8 @@ class CpdTest {
 
         //Verify
         printDupMatches(matches)
-        Assertions.assertThat(matches.size).isEqualTo(1)
-        Assertions.assertThat(matches[0].markCount).isEqualTo(2)
+        assertThat(matches.size).isEqualTo(1)
+        assertThat(matches[0].markCount).isEqualTo(2)
     }
 
     @Test
@@ -46,7 +46,7 @@ class CpdTest {
 
         //Verify
         printDupMatches(matches)
-        Assertions.assertThat(matches.size).isEqualTo(3)
+        assertThat(matches.size).isEqualTo(3)
     }
 
     private fun printDupMatches(matches: List<Match>) {

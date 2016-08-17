@@ -48,19 +48,28 @@ class KotlinFileContext(internal var filename: String, private val sourceCode: R
     }
 
     fun getBeginLine(range: TextRange): Int {
-        return DiagnosticUtils.offsetToLineAndColumn(document, range.startOffset).line
+        return findLineAndColumn(range.endOffset).line
     }
 
     fun getBeginColumn(range: TextRange): Int {
-        return DiagnosticUtils.offsetToLineAndColumn(document, range.startOffset).column
+        return findLineAndColumn(range.startOffset).column
     }
 
     fun getEndLine(range: TextRange): Int {
-        return DiagnosticUtils.offsetToLineAndColumn(document, range.endOffset).line
+        return findLineAndColumn(range.endOffset).line
     }
 
     fun getEndColumn(range: TextRange): Int {
-        return DiagnosticUtils.offsetToLineAndColumn(document, range.endOffset).column
+        return findLineAndColumn(range.endOffset).column
+    }
+
+    private fun findLineAndColumn(offset: Int): DiagnosticUtils.LineAndColumn {
+//        try {
+        return DiagnosticUtils.offsetToLineAndColumn(document, offset)
+//        } catch (ex: IndexOutOfBoundsException) {
+//            System.err.println("Wrong offset for line and column $offset > ${document.textLength}")
+//            return DiagnosticUtils.LineAndColumn.NONE
+//        }
     }
 
     companion object {

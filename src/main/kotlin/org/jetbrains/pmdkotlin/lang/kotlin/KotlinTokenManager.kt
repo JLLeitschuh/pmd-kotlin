@@ -5,11 +5,10 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
 import net.sourceforge.pmd.lang.TokenManager
 import org.jetbrains.kotlin.lexer.KotlinLexer
-import org.jetbrains.kotlin.lexer.KtTokens
 import org.jetbrains.kotlin.psi.KtTypeElement
 import org.jetbrains.pmdkotlin.cpd.KotlinToken
 
-class KotlinTokenManager(val kotlinFileContext: KotlinFileContext) : KotlinLexer(), TokenManager, KtTokens {
+class KotlinTokenManager(val kotlinFileContext: KotlinFileContext) : KotlinLexer(), TokenManager {
 
     init {
         val src = this.kotlinFileContext.sourceCodeToString()
@@ -48,10 +47,5 @@ class KotlinTokenManager(val kotlinFileContext: KotlinFileContext) : KotlinLexer
 
     companion object {
         private val fileName = ThreadLocal<String>()
-
-        fun getFileName(): String {
-            val fileName_ = fileName.get()
-            return fileName_ ?: "(no file name provided)"
-        }
     }
 }

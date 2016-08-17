@@ -1,5 +1,6 @@
 buildscript {
     ext.kotlinVersion = '1.0.3'
+    ext.pmdVersion = '5.5.1'
     repositories {
         jcenter()
         mavenCentral()
@@ -27,8 +28,8 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
 //    compile "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
     compile "org.jetbrains.kotlin:kotlin-compiler:$kotlinVersion"
-    compile 'net.sourceforge.pmd:pmd-core:5.4.1'
-    compile 'net.sourceforge.pmd:pmd-test:5.4.1'
+    compile "net.sourceforge.pmd:pmd-core:$pmdVersion"
+    compile "net.sourceforge.pmd:pmd-test:$pmdVersion"
     compile 'com.intellij:openapi:7.0.3'
 
     testCompile 'junit:junit:4.12'
