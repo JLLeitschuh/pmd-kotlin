@@ -38,13 +38,8 @@ class KotlinFileContext(internal var filename: String, private val sourceCode: R
         document = psiFile.viewProvider.document!!
     }
 
-    fun sourceCodeToString(): String {
-        try {
-            return IOUtils.toString(sourceCode)
-        } catch (e: IOException) {
-            throw RuntimeException(e)
-        }
-
+    fun getSourceCode(): CharSequence {
+        return document.immutableCharSequence
     }
 
     fun getBeginLine(range: TextRange): Int {
@@ -63,14 +58,16 @@ class KotlinFileContext(internal var filename: String, private val sourceCode: R
         return findLineAndColumn(range.endOffset).column
     }
 
-    private fun findLineAndColumn(offset: Int): DiagnosticUtils.LineAndColumn {
-//        try {
-        return DiagnosticUtils.offsetToLineAndColumn(document, offset)
-//        } catch (ex: IndexOutOfBoundsException) {
-//            System.err.println("Wrong offset for line and column $offset > ${document.textLength}")
-//            return DiagnosticUtils.LineAndColumn.NONE
-//        }
+    private fun sourceCodeToString(): String {
+        try {
+            return IOUtils.toString(sourceCode)
+        } catch (e: IOException) {
+            throw RuntimeException(e)
+        }
+
     }
+
+    private fun findLineAndColumn(offset: Int): DiagnosticUtils.LineAndColumn = DiagnosticUtils.offsetToLineAndColumn(document, offset)
 
     companion object {
 

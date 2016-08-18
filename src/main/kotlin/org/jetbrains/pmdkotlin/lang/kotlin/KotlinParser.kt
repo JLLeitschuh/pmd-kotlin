@@ -54,7 +54,7 @@ class KotlinParser(private val parserOptions: ParserOptions) : Parser {
     override fun parse(fileName: String, source: Reader): AbstractKotlinNode {
         val kotlinContext = KotlinFileContext(fileName, source)
         try {
-            val builder = PsiBuilderImpl(KotlinFileContext.project, kotlinContext.psiFile, KotlinFileContext.parserDefinition, KotlinTokenManager(kotlinContext), null, kotlinContext.sourceCodeToString(), null, null)
+            val builder = PsiBuilderImpl(KotlinFileContext.project, kotlinContext.psiFile, KotlinFileContext.parserDefinition, KotlinTokenManager(kotlinContext), null, kotlinContext.getSourceCode(), null, null)
             val root = parser?.parse(KtNodeTypes.KT_FILE, builder, kotlinContext.psiFile) as FileElement
             root.psi = kotlinContext.psiFile.node.psi
 

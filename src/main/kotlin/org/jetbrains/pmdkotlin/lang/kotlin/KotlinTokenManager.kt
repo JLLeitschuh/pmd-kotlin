@@ -13,7 +13,7 @@ class KotlinTokenManager(val kotlinFileContext: KotlinFileContext) : KotlinLexer
     var theFileName = "n/a"
 
     init {
-        val src = normalizeLineEndings(this.kotlinFileContext.sourceCodeToString())
+        val src = this.kotlinFileContext.getSourceCode()
         start(src, 0, src.length, 0)
     }
 
@@ -46,10 +46,4 @@ class KotlinTokenManager(val kotlinFileContext: KotlinFileContext) : KotlinLexer
         val leaf = findElementAt(token.ofset)
         return PsiTreeUtil.getParentOfType(leaf, KtTypeElement::class.java) != null
     }
-
-    /**
-     * Normalize all line endings to '\n' to avoid lexer and parser errors.
-     * https://github.com/Poeschl/pmd-kotlin/issues/2
-     */
-    private fun normalizeLineEndings(code: String): String = code.replace("\r\n", "\n").replace("\r", "\n")
 }
