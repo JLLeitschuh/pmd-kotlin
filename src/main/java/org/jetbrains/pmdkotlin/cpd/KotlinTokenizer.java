@@ -27,7 +27,7 @@ public class KotlinTokenizer implements Tokenizer {
 
         KotlinParser parser = (KotlinParser) languageVersionHandler.getParser(languageVersionHandler.getDefaultParserOptions());
 
-         tokenManager = (KotlinTokenManager) parser.getTokenManager(
+        tokenManager = (KotlinTokenManager) parser.getTokenManager(
                 sourceCode.getFileName(), new CharSequenceReader(sourceCode.getCodeBuffer()));
 
         TokenDiscarder discarder = new TokenDiscarder();

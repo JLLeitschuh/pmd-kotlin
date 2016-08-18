@@ -6,11 +6,6 @@ package org.jetbrains.pmdkotlin.cpd
  */
 class DuplCode1 {
 
-
-    fun bar(text: String): String {
-        return text
-    }
-
     fun foobar() {
         val dummyList = mutableListOf<Int>()
 
@@ -20,21 +15,13 @@ class DuplCode1 {
         val value2 = 2 + 42
         dummyList.add(value2)
 
-        val value3 = 3 + 42
+        val value3 = 2 + 42
         dummyList.add(value3)
-
-        val value4 = 4 + 42
-        dummyList.add(value4)
     }
 }
 
 class DuplCode2 {
 
-
-    fun foo(text: String): String {
-        return text
-    }
-
     fun foobar() {
         val dummyList = mutableListOf<Int>()
 
@@ -44,10 +31,7 @@ class DuplCode2 {
         val value2 = 2 + 42
         dummyList.add(value2)
 
-        val value3 = 3 + 42
+        val value3 = 2 + 42
         dummyList.add(value3)
-
-        val value4 = 4 + 42
-        dummyList.add(value4)
     }
 }

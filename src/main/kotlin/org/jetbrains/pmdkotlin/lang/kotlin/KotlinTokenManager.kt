@@ -10,8 +10,10 @@ import org.jetbrains.pmdkotlin.cpd.KotlinToken
 
 class KotlinTokenManager(val kotlinFileContext: KotlinFileContext) : KotlinLexer(), TokenManager {
 
+    var theFileName = "n/a"
+
     init {
-        val src = this.kotlinFileContext.sourceCodeToString()
+        val src = reduceWindowsLineEndings(this.kotlinFileContext.sourceCodeToString())
         start(src, 0, src.length, 0)
     }
 
@@ -33,7 +35,7 @@ class KotlinTokenManager(val kotlinFileContext: KotlinFileContext) : KotlinLexer
     }
 
     override fun setFileName(fileName: String) {
-        KotlinTokenManager.fileName.set(fileName)
+        theFileName = fileName
     }
 
     fun findElementAt(offset: Int): PsiElement? {
@@ -45,7 +47,9 @@ class KotlinTokenManager(val kotlinFileContext: KotlinFileContext) : KotlinLexer
         return PsiTreeUtil.getParentOfType(leaf, KtTypeElement::class.java) != null
     }
 
-    companion object {
-        private val fileName = ThreadLocal<String>()
-    }
+    /**
+     * Workaround for double-counted line-endings on windows environments.
+     * https://youtrack.jetbrains.com/issue/KT-13489
+     */
+    private fun reduceWindowsLineEndings(code: String): String = code.replace("\r\n", "\n")
 }
