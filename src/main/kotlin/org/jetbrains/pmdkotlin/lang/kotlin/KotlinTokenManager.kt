@@ -13,7 +13,7 @@ class KotlinTokenManager(val kotlinFileContext: KotlinFileContext) : KotlinLexer
     var theFileName = "n/a"
 
     init {
-        val src = reduceWindowsLineEndings(this.kotlinFileContext.sourceCodeToString())
+        val src = normalizeLineEndings(this.kotlinFileContext.sourceCodeToString())
         start(src, 0, src.length, 0)
     }
 
@@ -48,8 +48,8 @@ class KotlinTokenManager(val kotlinFileContext: KotlinFileContext) : KotlinLexer
     }
 
     /**
-     * Workaround for double-counted line-endings on windows environments.
-     * https://youtrack.jetbrains.com/issue/KT-13489
+     * Normalize all line endings to '\n' to avoid lexer and parser errors.
+     * https://github.com/Poeschl/pmd-kotlin/issues/2
      */
-    private fun reduceWindowsLineEndings(code: String): String = code.replace("\r\n", "\n")
+    private fun normalizeLineEndings(code: String): String = code.replace("\r\n", "\n").replace("\r", "\n")
 }
