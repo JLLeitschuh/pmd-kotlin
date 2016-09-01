@@ -8,6 +8,7 @@ import net.sourceforge.pmd.lang.ParserOptions
 import net.sourceforge.pmd.lang.TokenManager
 import net.sourceforge.pmd.lang.ast.ParseException
 import org.jetbrains.kotlin.KtNodeTypes
+import org.jetbrains.kotlin.psi.KtElement
 import org.jetbrains.pmdkotlin.lang.kotlin.ast.AbstractKotlinNode
 import org.jetbrains.pmdkotlin.lang.kotlin.ast.KotlinASTNodeAdapter
 import java.io.Reader
@@ -38,15 +39,13 @@ class KotlinParser(private val parserOptions: ParserOptions) : Parser {
         return true
     }
 
-    private fun showTree(v: ASTNode, s: String) {
-        //System.err.println(s + v.getClass());
+    private fun showTree(v: ASTNode, prefix: String) {
         if (v !is FileElement) {
-            val psi = v.psi
 
-            System.err.println(s + v.psi.javaClass)
+            System.out.println("$prefix${v.psi.javaClass.simpleName} (${v.psi.text.replace("\n", "\\n").replace("\t", " ").replace("  ", " ")}) [${v.psi is KtElement}]")
         }
         for (cv in v.getChildren(null)) {
-            showTree(cv, s + "  ")
+            showTree(cv, prefix + "  ")
         }
     }
 
@@ -58,7 +57,7 @@ class KotlinParser(private val parserOptions: ParserOptions) : Parser {
             val root = parser?.parse(KtNodeTypes.KT_FILE, builder, kotlinContext.psiFile) as FileElement
             root.psi = kotlinContext.psiFile.node.psi
 
-            //            showTree(root, "Parsed tree");
+            showTree(root, "|")
 
             return KotlinASTNodeAdapter(root.psi, kotlinContext)
         } catch (e: Exception) {

@@ -17,9 +17,9 @@ class UnreachableCodeRule : AbstractDeadcodeRule(Errors.UNREACHABLE_CODE) {
 
     override fun processElement(element: KtElement) {
         if (element is KtDeclarationWithBody) {
-            ControlFlowInformationProvider(element, AbstractDeadcodeRule.trace).checkFunction(null)
+            ControlFlowInformationProvider(element, getBindingTrace()).checkFunction(null)
         } else if (element is KtIfExpression) {
-            val ifExpr = element as KtIfExpression
+            val ifExpr = element
             if (ifExpr.condition?.text == "true" || ifExpr.condition?.text == "false") {
                 addViolation(ifExpr)
             }

@@ -13,7 +13,7 @@ public abstract class AbstractUnusedExpressionRule extends AbstractDeadcodeRule 
 
     @Override
     protected void processElement(KtElement element) {
-        ControlFlowInformationProvider provider = new ControlFlowInformationProvider(element, AbstractDeadcodeRule.trace);
+        ControlFlowInformationProvider provider = new ControlFlowInformationProvider(element, getBindingTrace());
     }
 
     @Override

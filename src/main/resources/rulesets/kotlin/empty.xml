@@ -15,7 +15,7 @@
           class="org.jetbrains.pmdkotlin.lang.kotlin.rule.empty.EmptyTryBlock">
 
         <description>
-            Avoid empty try blocks - what's the point?
+            Avoid empty try blocks - what'prefix the point?
         </description>
 
         <priority>3</priority>
