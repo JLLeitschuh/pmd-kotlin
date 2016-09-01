@@ -35,3 +35,8 @@ dependencies {
     testCompile 'junit:junit:4.12'
     testCompile 'org.assertj:assertj-core:3.4.1'
 }
+
+task(guiCPD, dependsOn: 'classes', type: JavaExec) {
+    main = 'net.sourceforge.pmd.cpd.GUI'
+    classpath = sourceSets.main.runtimeClasspath
+}
