@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<test-data>
+    <test-code>
+        <description>Empty when block</description>
+        <expected-problems>1</expected-problems>
+        <code><![CDATA[
+fun main() {
+    val i = 0
+    when (i) {
+        0 ->
+        1 ->
+    }
+}
+     ]]></code>
+    </test-code>
+</test-data>

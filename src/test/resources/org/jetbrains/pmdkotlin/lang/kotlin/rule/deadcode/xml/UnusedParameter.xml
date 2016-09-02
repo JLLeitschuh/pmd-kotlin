@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<test-data>
+    <test-code>
+        <description>Unused Parameter</description>
+        <expected-problems>1</expected-problems>
+        <code><![CDATA[
+fun main(dump: Int): Int {
+    return 1 + 2
+}
+     ]]></code>
+    </test-code>
+</test-data>

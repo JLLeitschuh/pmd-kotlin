@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<test-data>
+    <test-code>
+        <description>Empty if block</description>
+        <expected-problems>1</expected-problems>
+        <code><![CDATA[
+fun main() {
+    if (true){
+
+    } else {
+      println("Hello")
+    }
+}
+     ]]></code>
+    </test-code>
+    <test-code>
+        <description>Empty then block</description>
+        <expected-problems>1</expected-problems>
+        <code><![CDATA[
+fun main() {
+    if (true){
+      println("Hello")
+    } else {
+
+    }
+}
+     ]]></code>
+    </test-code>
+</test-data>

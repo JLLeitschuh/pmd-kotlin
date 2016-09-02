@@ -3,12 +3,12 @@ package org.jetbrains.pmdkotlin.lang.kotlin.rule.empty
 import org.junit.Before
 
 /**
- * Created on 22.07.2016.
+ * Created on 02.09.2016
  */
-class EmptyTryBlockTest : BaseEmpty() {
+class EmptyLoopStatementTest : BaseEmpty() {
 
     @Before
     override fun setUp() {
-        addRule(RULESET, "EmptyTryBlock")
+        addRule(RULESET, "EmptyLoopStatement")
     }
 }

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<test-data>
+    <test-code>
+        <description>Empty for block</description>
+        <expected-problems>2</expected-problems>
+        <code><![CDATA[
+fun main() {
+    val collection = emptyList<Int>()
+    for (item in collection){
+
+    }
+
+    for (i in collection.indices) {
+
+    }
+}
+     ]]></code>
+    </test-code>
+
+    <test-code>
+        <description>Empty while block</description>
+        <expected-problems>2</expected-problems>
+        <code><![CDATA[
+fun main() {
+    val collection = emptyList<Int>()
+    while (!collection.isEmpty()) {
+
+    }
+
+    do {
+
+    } while (!collection.isEmpty())
+}
+     ]]></code>
+    </test-code>
+</test-data>

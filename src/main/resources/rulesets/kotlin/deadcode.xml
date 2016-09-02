@@ -143,4 +143,39 @@
             ]]>
         </example>
     </rule>
+
+    <rule name="UnusedChangedVariable"
+          language="kotlin"
+          message="Variable is not used after being changed"
+          class="org.jetbrains.pmdkotlin.lang.kotlin.rule.deadcode.UnusedChangedValueRule">
+
+        <description>
+            Unused variable after being changed
+        </description>
+
+        <priority>3</priority>
+
+        <example>
+            <![CDATA[
+            ]]>
+        </example>
+    </rule>
+
+    <rule name="VariableWithRedundantInitializer"
+          language="kotlin"
+          message="Redundant Initializer for variable"
+          class="org.jetbrains.pmdkotlin.lang.kotlin.rule.deadcode.VariableWithRedudantInitializerRule">
+
+        <description>
+            Redundant Initializer for variable.
+        </description>
+
+        <priority>3</priority>
+
+        <example>
+            <![CDATA[
+            ]]>
+        </example>
+    </rule>
+
 </ruleset>

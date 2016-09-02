@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <test-data>
     <test-code>
-        <description>Two unused variables</description>
-        <expected-problems>2</expected-problems>
+        <description>Redundant Initializer</description>
+        <expected-problems>1</expected-problems>
         <code><![CDATA[
 fun main() {
-    var a = 4
-    var b = 2
+    var bad = 0
+
+    bad = 42
 }
      ]]></code>
     </test-code>

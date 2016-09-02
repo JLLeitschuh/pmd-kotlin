@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <test-data>
     <test-code>
-        <description>Two unused variables</description>
-        <expected-problems>2</expected-problems>
+        <description>Unused changed variable</description>
+        <expected-problems>1</expected-problems>
         <code><![CDATA[
 fun main() {
     var a = 4
-    var b = 2
+    a = 2
 }
      ]]></code>
     </test-code>

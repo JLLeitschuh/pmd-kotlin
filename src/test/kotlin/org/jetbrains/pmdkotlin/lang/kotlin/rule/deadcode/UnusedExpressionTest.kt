@@ -3,12 +3,12 @@ package org.jetbrains.pmdkotlin.lang.kotlin.rule.deadcode
 import org.junit.Before
 
 /**
- * Created on 22.07.2016.
+ * Created on 02.09.2016
  */
-class UnreachableCodeTest : BaseDeadcode() {
+class UnusedExpressionTest : BaseDeadcode() {
 
     @Before
     override fun setUp() {
-        addRule(RULESET, "UnreachableCode")
+        addRule(RULESET, "UnusedExpression")
     }
 }
