@@ -3,10 +3,12 @@ package org.jetbrains.pmdkotlin.lang.kotlin.rule.deadcode
 import com.intellij.psi.PsiElement
 import net.sourceforge.pmd.lang.ast.Node
 import org.jetbrains.kotlin.cfg.ControlFlowInformationProvider
+import org.jetbrains.kotlin.config.LanguageVersionSettingsImpl.Companion.DEFAULT
 import org.jetbrains.kotlin.diagnostics.Errors
 import org.jetbrains.kotlin.psi.KtDeclarationWithBody
 import org.jetbrains.kotlin.psi.KtElement
 import org.jetbrains.kotlin.psi.KtIfExpression
+import org.jetbrains.kotlin.resolve.checkers.PlatformDiagnosticSuppressor
 import org.jetbrains.pmdkotlin.lang.kotlin.ast.KotlinASTNodeAdapter
 
 class UnreachableCodeRule : AbstractDeadcodeRule(Errors.UNREACHABLE_CODE) {
@@ -17,7 +19,8 @@ class UnreachableCodeRule : AbstractDeadcodeRule(Errors.UNREACHABLE_CODE) {
 
     override fun processElement(element: KtElement) {
         if (element is KtDeclarationWithBody) {
-            ControlFlowInformationProvider(element, getBindingTrace()).checkFunction(null)
+            ControlFlowInformationProvider(element, getBindingTrace(), DEFAULT, PlatformDiagnosticSuppressor.Default)
+                .checkFunction(null)
         } else if (element is KtIfExpression) {
             val ifExpr = element
             if (ifExpr.condition?.text == "true" || ifExpr.condition?.text == "false") {

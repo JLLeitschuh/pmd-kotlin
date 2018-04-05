@@ -15,7 +15,7 @@ import org.jetbrains.pmdkotlin.lang.kotlin.rule.KotlinRuleChainVisitor
 class KotlinLanguageModule : BaseLanguageModule(KotlinLanguageModule.NAME, null, KotlinLanguageModule.TERSE_NAME, KotlinRuleChainVisitor::class.java, KotlinLanguageModule.FILE_EXTENSION) {
 
     init {
-        addVersion("1.0.3", KotlinHandler(), true)
+        addVersion(KotlinVersion.CURRENT.toString(), KotlinHandler(), true)
 
         initWorkaround()
     }
@@ -25,7 +25,6 @@ class KotlinLanguageModule : BaseLanguageModule(KotlinLanguageModule.NAME, null,
      */
     private fun initWorkaround() {
         object : AbstractTypeConstructor(LockBasedStorageManager.NO_LOCKS) {
-            override fun getAnnotations(): Annotations = Annotations.EMPTY
             override fun getParameters(): List<TypeParameterDescriptor> = emptyList()
             override fun isFinal(): Boolean = true
             override fun isDenotable(): Boolean = true

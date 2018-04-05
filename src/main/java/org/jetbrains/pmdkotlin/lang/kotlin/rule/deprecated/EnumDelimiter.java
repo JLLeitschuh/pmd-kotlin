@@ -29,7 +29,7 @@ public class EnumDelimiter extends AbstractKotlinRule {
             next = next.getNextSibling();
         }
         KtDeclaration nextDeclaration = (KtDeclaration) next;
-        next = PsiUtilsKt.getNextSiblingIgnoringWhitespaceAndComments(node);
+        next = PsiUtilsKt.getNextSiblingIgnoringWhitespaceAndComments(node, false);
         IElementType nextType = next != null ? next.getNode().getElementType() : null;
         if (nextDeclaration instanceof KtEnumEntry) {
             // Not last
@@ -37,7 +37,7 @@ public class EnumDelimiter extends AbstractKotlinRule {
         }
         else {
             if (nextType == KtTokens.COMMA) {
-                next = PsiUtilsKt.getNextSiblingIgnoringWhitespaceAndComments(next);
+                next = PsiUtilsKt.getNextSiblingIgnoringWhitespaceAndComments(next, false);
                 nextType = next != null ? next.getNode().getElementType() : null;
             }
             return nextType != KtTokens.SEMICOLON && nextType != KtTokens.RBRACE ? ";" : "";
