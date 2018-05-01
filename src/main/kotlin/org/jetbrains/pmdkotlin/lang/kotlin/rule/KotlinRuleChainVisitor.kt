@@ -24,6 +24,5 @@ class KotlinRuleChainVisitor : AbstractRuleChainVisitor() {
         for (i in nodes.indices) {
             visitor.visit(nodes[i], ctx)
         }
-
     }
 }

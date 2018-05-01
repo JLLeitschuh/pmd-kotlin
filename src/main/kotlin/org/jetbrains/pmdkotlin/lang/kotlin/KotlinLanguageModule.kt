@@ -6,7 +6,6 @@ import org.jetbrains.kotlin.builtins.KotlinBuiltIns
 import org.jetbrains.kotlin.descriptors.ClassifierDescriptor
 import org.jetbrains.kotlin.descriptors.SupertypeLoopChecker
 import org.jetbrains.kotlin.descriptors.TypeParameterDescriptor
-import org.jetbrains.kotlin.descriptors.annotations.Annotations
 import org.jetbrains.kotlin.storage.LockBasedStorageManager
 import org.jetbrains.kotlin.types.AbstractTypeConstructor
 import org.jetbrains.kotlin.types.KotlinType
@@ -43,5 +42,4 @@ class KotlinLanguageModule : BaseLanguageModule(KotlinLanguageModule.NAME, null,
 
         private val FILE_EXTENSION = "kt"
     }
-
 }

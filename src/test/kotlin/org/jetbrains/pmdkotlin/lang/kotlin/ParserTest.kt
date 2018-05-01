@@ -32,5 +32,4 @@ class ParserTest {
         val root = parser.parse(file.absolutePath, FileReader(file))
         root.jjtAccept(adapter)
     }
-
 }

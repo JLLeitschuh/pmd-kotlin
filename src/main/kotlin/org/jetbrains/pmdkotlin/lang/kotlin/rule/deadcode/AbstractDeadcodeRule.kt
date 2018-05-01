@@ -7,7 +7,6 @@ import org.jetbrains.kotlin.psi.KtElement
 import org.jetbrains.kotlin.resolve.BindingTrace
 import org.jetbrains.kotlin.resolve.BindingTraceContext
 import org.jetbrains.pmdkotlin.lang.kotlin.rule.AbstractKotlinRule
-import java.util.*
 
 abstract class AbstractDeadcodeRule protected constructor(protected val myViolation: DiagnosticFactory<*>) : AbstractKotlinRule() {
 

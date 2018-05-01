@@ -1,13 +1,17 @@
-package org.jetbrains.pmdkotlin.lang.kotlin.rule.other;
+package org.jetbrains.pmdkotlin.lang.kotlin.rule.other
 
 import org.jetbrains.kotlin.lexer.KtSingleValueToken
 import org.jetbrains.kotlin.lexer.KtTokens
-import org.jetbrains.kotlin.psi.*
+import org.jetbrains.kotlin.psi.KtBinaryExpression
+import org.jetbrains.kotlin.psi.KtIsExpression
+import org.jetbrains.kotlin.psi.KtOperationExpression
+import org.jetbrains.kotlin.psi.KtPrefixExpression
+import org.jetbrains.kotlin.psi.KtPsiUtil
 import org.jetbrains.pmdkotlin.lang.kotlin.ast.KotlinASTNodeAdapter
 import org.jetbrains.pmdkotlin.lang.kotlin.rule.AbstractKotlinRule
 
-public class SimplifyNegatedBinaryExpression : AbstractKotlinRule() {
-    public override fun visitPrefixExpressionPMD(expression: KtPrefixExpression, data: Any?): Any? {
+class SimplifyNegatedBinaryExpression : AbstractKotlinRule() {
+    override fun visitPrefixExpressionPMD(expression: KtPrefixExpression, data: Any?): Any? {
         if (isApplicable(expression)) {
             addViolation(savedData, expression.getCopyableUserData(KotlinASTNodeAdapter.OUTER_NODE_KEY))
         }

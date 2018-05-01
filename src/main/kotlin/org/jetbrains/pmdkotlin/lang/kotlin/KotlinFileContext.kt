@@ -23,7 +23,6 @@ class KotlinFileContext(internal var filename: String, private val sourceCode: R
 
     private val document: Document
 
-
     init {
 
         if (!filename.isEmpty() && filename != "n/a") {
@@ -64,7 +63,6 @@ class KotlinFileContext(internal var filename: String, private val sourceCode: R
         } catch (e: IOException) {
             throw RuntimeException(e)
         }
-
     }
 
     private fun findLineAndColumn(offset: Int): DiagnosticUtils.LineAndColumn = DiagnosticUtils.offsetToLineAndColumn(document, offset)

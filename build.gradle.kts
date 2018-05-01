@@ -2,6 +2,7 @@ plugins {
     `idea`
     `java`
     kotlin("jvm") version "1.2.31"
+    id("com.diffplug.gradle.spotless") version "3.10.0"
 }
 
 group = "com.jetbrains.pmd-kotlin"
@@ -10,6 +11,12 @@ version = "0.1"
 repositories {
     jcenter()
     mavenCentral()
+}
+
+spotless {
+    kotlin {
+        ktlint("0.22.0")
+    }
 }
 
 val kotlinVersion = property("kotlin.version")

@@ -12,7 +12,6 @@ import org.jetbrains.kotlin.psi.KtElement
 import org.jetbrains.pmdkotlin.lang.kotlin.ast.AbstractKotlinNode
 import org.jetbrains.pmdkotlin.lang.kotlin.ast.KotlinASTNodeAdapter
 import java.io.Reader
-import java.util.*
 
 class KotlinParser(private val parserOptions: ParserOptions) : Parser {
     private var parser: org.jetbrains.kotlin.parsing.KotlinParser? = null
@@ -25,7 +24,6 @@ class KotlinParser(private val parserOptions: ParserOptions) : Parser {
             throw IllegalStateException("KotlinParser not found!")
         }
     }
-
 
     override fun getParserOptions(): ParserOptions {
         return this.parserOptions
@@ -63,7 +61,6 @@ class KotlinParser(private val parserOptions: ParserOptions) : Parser {
         } catch (e: Exception) {
             throw RuntimeException(e)
         }
-
     }
 
     override fun getSuppressMap(): Map<Int, String> {
