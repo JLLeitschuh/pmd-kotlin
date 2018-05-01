@@ -2,7 +2,7 @@ package org.jetbrains.pmdkotlin.cpd
 
 /**
  * Project: pmd-kotlin
- * Created by Markus Pöschl on 27.07.16.
+ * Created by Markus Pöschl
  */
 class DuplCode1 {
 
