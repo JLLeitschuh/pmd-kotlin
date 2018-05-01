@@ -1,6 +1,6 @@
 pmd-kotlin
 ======================
-[![Build Status](https://travis-ci.org/jlleitschuh/pmd-kotlin.png?branch=master)](https://travis-ci.org/jlleitschuh/pmd-kotlin)
+[![Build Status](https://travis-ci.org/JLLeitschuh/pmd-kotlin.png?branch=master)](https://travis-ci.org/JLLeitschuh/pmd-kotlin)
 
 PMD static analysis module for Kotlin programming language.
 
