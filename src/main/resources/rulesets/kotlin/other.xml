@@ -11,7 +11,7 @@
     <rule name="SimplifyNegatedBinaryExpression"
           language="kotlin"
           message="Simplify negated expression"
-          class="org.jetbrains.pmdkotlin.lang.kotlin.rule.other.SimplifyNegatedBinaryExpression">
+          class="org.jlleitschuh.pmdkotlin.lang.kotlin.rule.other.SimplifyNegatedBinaryExpression">
 
         <description>
             Simplify negated expression

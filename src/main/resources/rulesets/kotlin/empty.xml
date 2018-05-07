@@ -12,7 +12,7 @@
     <rule name="EmptyTryBlock"
           language="kotlin"
           message="Avoid empty try blocks"
-          class="org.jetbrains.pmdkotlin.lang.kotlin.rule.empty.EmptyTryBlock">
+          class="org.jlleitschuh.pmdkotlin.lang.kotlin.rule.empty.EmptyTryBlock">
 
         <description>
             Avoid empty try blocks - what'prefix the point?
@@ -30,7 +30,7 @@
     <rule name="EmptyCatchBlock"
           language="kotlin"
           message="Avoid empty catch blocks"
-          class="org.jetbrains.pmdkotlin.lang.kotlin.rule.empty.EmptyCatchBlock">
+          class="org.jlleitschuh.pmdkotlin.lang.kotlin.rule.empty.EmptyCatchBlock">
 
         <description>
             Empty Catch Block finds instances where an exception is caught,
@@ -49,7 +49,7 @@
     <rule name="EmptyFinallyBlock"
           language="kotlin"
           message="Avoid empty finally blocks"
-          class="org.jetbrains.pmdkotlin.lang.kotlin.rule.empty.EmptyFinallyBlock">
+          class="org.jlleitschuh.pmdkotlin.lang.kotlin.rule.empty.EmptyFinallyBlock">
         <description>
             Empty finally blocks serve no purpose and should be removed.
         </description>
@@ -65,7 +65,7 @@
     <rule name="EmptyIfStatement"
           language="kotlin"
           message="Avoid empty 'if' statements"
-          class="org.jetbrains.pmdkotlin.lang.kotlin.rule.empty.EmptyIfStatement">
+          class="org.jlleitschuh.pmdkotlin.lang.kotlin.rule.empty.EmptyIfStatement">
 
         <description>
             Empty If Statement finds instances where a condition is checked but nothing is done about it.
@@ -82,7 +82,7 @@
     <rule name="EmptyLoopStatement"
           language="kotlin"
           message="Avoid empty loop statements"
-          class="org.jetbrains.pmdkotlin.lang.kotlin.rule.empty.EmptyLoopStatement">
+          class="org.jlleitschuh.pmdkotlin.lang.kotlin.rule.empty.EmptyLoopStatement">
 
         <description>
             Empty Loop Statement finds all instances where a loop statement does nothing.
@@ -101,7 +101,7 @@
     <rule name="EmptyWhenStatement"
           language="kotlin"
           message="Avoid empty when statements"
-          class="org.jetbrains.pmdkotlin.lang.kotlin.rule.empty.EmptyWhenStatement">
+          class="org.jlleitschuh.pmdkotlin.lang.kotlin.rule.empty.EmptyWhenStatement">
 
         <description>
             Empty when statements serve no purpose and should be removed.

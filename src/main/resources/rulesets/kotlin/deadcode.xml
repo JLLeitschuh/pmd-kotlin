@@ -11,7 +11,7 @@
     <rule name="UnreachableCode"
           language="kotlin"
           message="Unreachable code on lines {0}-{1}"
-          class="org.jetbrains.pmdkotlin.lang.kotlin.rule.deadcode.UnreachableCodeRule">
+          class="org.jlleitschuh.pmdkotlin.lang.kotlin.rule.deadcode.UnreachableCodeRule">
 
         <description>
             Unreachable code
@@ -28,7 +28,7 @@
     <rule name="UnusedValue"
           language="kotlin"
           message="Unused value"
-          class="org.jetbrains.pmdkotlin.lang.kotlin.rule.deadcode.UnusedValueRule">
+          class="org.jlleitschuh.pmdkotlin.lang.kotlin.rule.deadcode.UnusedValueRule">
 
         <description>
             Unused value
@@ -45,7 +45,7 @@
     <rule name="UnusedChangedValue"
           language="kotlin"
           message="Unused changed value"
-          class="org.jetbrains.pmdkotlin.lang.kotlin.rule.deadcode.UnusedChangedValueRule">
+          class="org.jlleitschuh.pmdkotlin.lang.kotlin.rule.deadcode.UnusedChangedValueRule">
 
         <description>
             Unused changed value
@@ -62,7 +62,7 @@
     <rule name="UnusedVariable"
           language="kotlin"
           message="Unused changed value"
-          class="org.jetbrains.pmdkotlin.lang.kotlin.rule.deadcode.UnusedVariableRule">
+          class="org.jlleitschuh.pmdkotlin.lang.kotlin.rule.deadcode.UnusedVariableRule">
 
         <description>
             Unused variable
@@ -79,7 +79,7 @@
     <rule name="UnusedParameter"
           language="kotlin"
           message="Unused changed value"
-          class="org.jetbrains.pmdkotlin.lang.kotlin.rule.deadcode.UnusedParameterRule">
+          class="org.jlleitschuh.pmdkotlin.lang.kotlin.rule.deadcode.UnusedParameterRule">
 
         <description>
             Unused parameter
@@ -96,7 +96,7 @@
     <rule name="AssignedButNeverAccessedVariable"
           language="kotlin"
           message="Assigned but never accessed variable"
-          class="org.jetbrains.pmdkotlin.lang.kotlin.rule.deadcode.AssignedButNeverAccessedVariableRule">
+          class="org.jlleitschuh.pmdkotlin.lang.kotlin.rule.deadcode.AssignedButNeverAccessedVariableRule">
 
         <description>
             Assigned but never accessed variable
@@ -113,7 +113,7 @@
     <rule name="VariableWithRedudantInitializer"
           language="kotlin"
           message="Variable with redudant initializer"
-          class="org.jetbrains.pmdkotlin.lang.kotlin.rule.deadcode.VariableWithRedudantInitializerRule">
+          class="org.jlleitschuh.pmdkotlin.lang.kotlin.rule.deadcode.VariableWithRedudantInitializerRule">
 
         <description>
             Variable with redudant initializer
@@ -130,7 +130,7 @@
     <rule name="UnusedExpression"
           language="kotlin"
           message="Variable with redudant initializer"
-          class="org.jetbrains.pmdkotlin.lang.kotlin.rule.deadcode.UnusedExpressionRule">
+          class="org.jlleitschuh.pmdkotlin.lang.kotlin.rule.deadcode.UnusedExpressionRule">
 
         <description>
             Unused expression
@@ -147,7 +147,7 @@
     <rule name="UnusedChangedVariable"
           language="kotlin"
           message="Variable is not used after being changed"
-          class="org.jetbrains.pmdkotlin.lang.kotlin.rule.deadcode.UnusedChangedValueRule">
+          class="org.jlleitschuh.pmdkotlin.lang.kotlin.rule.deadcode.UnusedChangedValueRule">
 
         <description>
             Unused variable after being changed
@@ -164,7 +164,7 @@
     <rule name="VariableWithRedundantInitializer"
           language="kotlin"
           message="Redundant Initializer for variable"
-          class="org.jetbrains.pmdkotlin.lang.kotlin.rule.deadcode.VariableWithRedudantInitializerRule">
+          class="org.jlleitschuh.pmdkotlin.lang.kotlin.rule.deadcode.VariableWithRedudantInitializerRule">
 
         <description>
             Redundant Initializer for variable.
